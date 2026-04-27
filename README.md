@@ -53,10 +53,7 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert. Weitere Informationen finden
 .E-Mail: reza203393@yahoo.de
 .Telefon: 017647116508
 .GitHub: R-Mohammadzadeh
-## 🌐 Website   
-Besuchen Sie unsere Website unter [www.swiftdash.com](http://www.swiftdash.com) für weitere Informationen und Updates.
-## 📱 Mobile App
-SwiftDash bietet auch eine mobile App für iOS und Android, damit Sie Ihren Shop auch unterwegs verwalten können. Laden Sie die App aus dem App Store oder Google Play herunter und melden Sie sich mit Ihren Anmeldedaten an, um loszulegen!
+
 ## 🛠️ Technologie-Stack
 - **Frontend**: React, Redux, Tailwind CSS
 - **Backend**: Node.js, Express.js  
