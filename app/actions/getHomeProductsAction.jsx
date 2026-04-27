@@ -5,8 +5,11 @@ import ProductsData from "@/models/ProductsData"
 
 
 
+
+
 export async function getHomeProducts() {
 try{
+await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 seconds delay    
   await connectDB()
 
 //1. Define target categories for the home page sliders 
@@ -19,6 +22,17 @@ const products = await ProductsData.find(
 .sort({createdAt : -1})
 .limit(20)
 .lean()
+
+// 3. Leere Ergebnisse angemessen behandeln
+if(!products || products.length === 0){
+    console.warn("No products found for the specified home categories.")
+    return{
+        success : true ,
+        products:[],
+        message:"No products available at the moment."
+    }
+}
+
 return {
     products : JSON.parse(JSON.stringify(products)) , // to handle date serialization
 };
@@ -26,7 +40,7 @@ return {
 }
 catch(error){
     console.error('Fetch Products Error :' , error)
-    return {products : [] , totalPage : 0}
+    return {products : [] , totalPage : 0 , success:false ,error: "Failed to load products. Please check your connection."}
 }
 
 }

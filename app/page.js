@@ -9,11 +9,21 @@ import Link from "next/link";
 
 export default async function HomePage() {
   // 
-  const response = await getHomeProducts();
-  const rawProducts = response?.products || [];
+  const {success , products ,error } = await getHomeProducts();
 
-  // 
-  console.log("Products for Slider:", rawProducts.length);
+if(!success){
+  return <div className='text-red-500 p-10 text-center'>{error}</div>
+}
+
+
+if(products.length === 0){
+  return <div className='p-10 text-center'>
+    In unserer Kollektion wurden keine Produkte gefunden.
+  </div>
+}
+
+
+  const rawProducts = response?.products || [];
 
   // 
   const cameras = rawProducts.filter(p => p.category?.toLowerCase() === 'camera');

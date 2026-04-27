@@ -3,15 +3,16 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import CountUp from 'react-countup';
-import { FaTwitter ,  FaLinkedinIn ,FaInstagramSquare ,FaTelegram, FaFacebook} from "react-icons/fa";
+import { FaLinkedinIn ,FaInstagramSquare ,FaTelegram, FaFacebook} from "react-icons/fa";
 
 
 
 
 export default function AboutPage() {
+    
 return (
 <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-8">
-<div className="max-w-4xl mx-auto">
+<div className="max-w-4xl mx-auto mt-44">
 {/* Header Section */}
 <header className="text-center mb-16">
 <motion.h1 
