@@ -1,5 +1,5 @@
 # 🛒 SwiftDash - Full-Stack E-Commerce-Lösung
-[🌐 Live Demo](https://your-vercel-link.vercel.app)
+[🌐 Live Demo](https://omni-commerce-swart.vercel.app/)
 ## 💡 Projektbeschreibung
 SwiftDash ist eine moderne Full-Stack E-Commerce-Plattform, die mit **Next.js 15** entwickelt wurde. Das Ziel des Projekts ist es, eine extrem schnelle **Single-Page-Application (SPA)** bereitzustellen, die Server-Side Rendering (SSR) nutzt. Es bietet eine nahtlose Integration von Frontend und Backend, ein robustes Admin-Dashboard und eine skalierbare Datenbankstruktur mit MongoDB.
 
