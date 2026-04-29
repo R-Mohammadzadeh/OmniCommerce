@@ -13,10 +13,11 @@ export default auth((req) => {
 
   const isAdminRoute = nextUrl.pathname.startsWith('/admin');
   const isLoginpage = nextUrl.pathname.startsWith('/login');
+  const isDashboardPage = nextUrl.pathname === '/dashboard' ;
 
   // Wenn der Pfad login lautete und der Benutzer bereits eingeloggt war
   if (isLoginpage && isLoggedIn) {
-    return NextResponse.redirect(new URL(role === 'admin' ? '/admin' : '/', nextUrl));
+    return NextResponse.redirect(new URL(role === 'admin' ? '/dashboard' : '/', nextUrl));
   } 
   // Wenn der Pfad admin lautete und der Benutzer nicht admin war
   if (isAdminRoute) {
@@ -27,6 +28,10 @@ export default auth((req) => {
 
     if (role !== 'admin') {
       return NextResponse.redirect(new URL('/', nextUrl));
+    }
+
+    if(isDashboardPage || nextUrl.pathname === '/admin'){
+      return NextResponse.redirect(new URL('/dashboard' , nextUrl))
     }
   }
 
