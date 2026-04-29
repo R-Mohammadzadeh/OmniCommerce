@@ -8,8 +8,7 @@ import ProductsData from "@/models/ProductsData"
 
 
 export async function getHomeProducts() {
-try{
-await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 seconds delay    
+try{  
   await connectDB()
 
 //1. Define target categories for the home page sliders 
@@ -27,13 +26,14 @@ const products = await ProductsData.find(
 if(!products || products.length === 0){
     console.warn("No products found for the specified home categories.")
     return{
-        success : true ,
+        success : false ,
         products:[],
         message:"No products available at the moment."
     }
 }
 
 return {
+    success: true ,
     products : JSON.parse(JSON.stringify(products)) , // to handle date serialization
 };
 

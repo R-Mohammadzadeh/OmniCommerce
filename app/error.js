@@ -4,6 +4,7 @@ import { useEffect } from "react"
 
 
 export default function Error({error , reset}){
+    
 useEffect(() => {
     console.error("Critical UI Error:", error)
 },[error])

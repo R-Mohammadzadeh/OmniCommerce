@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 export default function DatenschutzPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 pt-32 pb-20 px-6">

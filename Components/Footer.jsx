@@ -19,8 +19,8 @@ title : 'Company',
 links : [
     {name : 'About Us' , href:'/about'},
     {name : 'Contact' , href:'/contact'},
-    {name : 'Terms of Service' , href:'/terms'},
-    {name : 'Privacy Policy' , href:'/privacy'},
+    {name : 'Impressum' , href:'/impressum'},
+    {name : 'Datenschutz' , href:'/datenschutz'},
 ],
 }]
 

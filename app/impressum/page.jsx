@@ -1,4 +1,11 @@
+export const dynamic = "force-static";
 import Link from "next/link";
+
+export const metadata = {
+  title : "Datenschutz | Reza Store",
+  robots : 'noindex' ,
+}
+
 
 export default function ImpressumPage() {
   return (
