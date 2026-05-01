@@ -37,7 +37,7 @@ export const registerAction = async (_prevState, formData) => {
   // Validierung mit Zod
   const validation = registerSchema.safeParse(rawData)
   if (!validation.success) {
-    const firstError = validation.error.errors[0]?.message || "Validierungsfehler aufgetreten";
+    const firstError = validation.error.issues[0]?.message || "Validierungsfehler aufgetreten";
     return { error: true, message: firstError }
   }
 

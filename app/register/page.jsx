@@ -23,6 +23,8 @@ export default function Register() {
  // Wenn keine Nachricht vorhanden ist oder diese Nachricht bereits verarbeitet wurde, tue nichts.   
     if (!state?.message ||state.timestamp === lastProcessedTimestamp.current) return;
 
+  lastProcessedTimestamp.current = state.timestamp
+    
     if (state.error) {
       toast.error(state.message);
     } else {

@@ -8,19 +8,51 @@ const [isVisible, setIsVisible] = useState(false);
 
 useEffect(() => {
 // checken, ob der Benutzer bereits eine Entscheidung getroffen hat
-const consent = localStorage.getItem("cookie-consent");
+if(typeof window !== 'undefined'){
+  const consent = localStorage.getItem("cookie-consent");
 if (!consent) {
-setIsVisible(true);
+setIsVisible(true);}
+return ;
+} 
+try{
+const parsed = JSON.parse(consent)
+
+// Falls akzeptiert → nicht erneut anzeigen
+if(parsed.status === 'accepted') return ;
+
+// Falls abgelehnt → nach 24 Stunden erneut anzeigen
+const now = Date.now();
+const oneDay = 24 * 60 * 60 * 1000 ;
+
+if(now - parsed.time > oneDay){
+    setIsVisible(true)
 }
+
+
+}
+catch(err){
+ // Falls das JSON-Objekt beschädigt war → erneute Anzeige   
+setIsVisible(true)
+}
+
 }, []);
 
+
+
+
 const handleAccept = () => {
-localStorage.setItem("cookie-consent", "accepted");
+localStorage.setItem("cookie-consent", JSON.stringify({
+    status: 'handleAccept',
+    time : Date.now()
+}));
 setIsVisible(false);
 };
 
 const handleDecline = () => {
-localStorage.setItem("cookie-consent", "declined");
+localStorage.setItem("cookie-consent", JSON.stringify({
+    status: 'declined',
+    time : Date.now()
+}));
 setIsVisible(false);
 };
 
@@ -28,9 +60,10 @@ return (
 <AnimatePresence>
 {isVisible && (
 <motion.div
-    initial={{ y: 100, opacity: 0 , display: "none" , duration: 1.8 ,transition: { duration: 0.5 } }}
-    animate={{ y: 0, opacity: 1 , display: "block" ,transition: { duration: 0.5 } }}
-    exit={{ y: 100, opacity: 0 , display: "none" , transition: { duration: 0.5 } }}
+  initial={{ y: 80, opacity: 0, scale: 0.95 }}
+  animate={{ y: 0, opacity: 1, scale: 1 }}
+  exit={{ y: 80, opacity: 0, scale: 0.95 }}
+  transition={{ duration: 0.4, ease: "easeOut" }}
 
     className="fixed bottom-6 left-6 right-6 md:left-auto md:right-10 md:w-100 z-100"
 >
