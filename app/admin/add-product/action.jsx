@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import cloudinary from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache"; 
 import ProductsData from "@/models/ProductsData"; 
-import { cookies } from "next/headers";
+
 
 export const addProductAction = async (prevState, formData) => {
   try {
@@ -13,20 +13,18 @@ export const addProductAction = async (prevState, formData) => {
     await connectDB();
 
     // 2. 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-    const user = await auth(token);
+ const session = await auth()
 
 
-    if (!user || user.role !== 'admin') {
-      return { error: true, message: "Unauthorized access! Admin only." };
-    }
+  if (!session || session.user?.role !== 'admin') {
+    return { error: true, message: "Zugriff verweigert! Nur für Admins." };
+  }
 
    
    // 3. 
     const file = formData.get('image');
     if (!file || file.size === 0) {
-      return { error: true, message: "Please select an image file!" };
+      return { error: true, message: "Bitte wählen Sie eine Bilddatei aus!" };
     }
 
     // 4. 
@@ -40,7 +38,7 @@ export const addProductAction = async (prevState, formData) => {
     // 
    
     if(base64String.startsWith('PCFK')){
-      return {error : true , message :"System Error: Form is sending HTML instead of Image. Please refresh (Ctrl+F5)."}
+    return {error : true , message :"Systemfehler: Das Formular sendet HTML anstelle eines Bildes. Bitte aktualisieren Sie die Seite (Strg+F5)."}
     }  
 
     // 5. 
@@ -68,16 +66,16 @@ export const addProductAction = async (prevState, formData) => {
 
     return { 
       error: false, 
-      message: `Success! ${newProduct.name} has been added.` 
+      message: `erfolgrich! ${newProduct.name} wurde hinzugefügt` 
     }; 
 
   } catch (error) {
-    console.error("FULL ERROR LOG:", error);
+    console.error("VOLLSTÄNDIGES FEHLERPROTOKOLL:", error);
     
     //    
     return { 
       error: true, 
-      message: error.message || "An unexpected error occurred!" 
+      message: error.message || "Es ist ein unerwarteter Fehler aufgetreten!" 
     };
   }
 }

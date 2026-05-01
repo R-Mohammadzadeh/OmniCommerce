@@ -2,101 +2,81 @@
 
 import UsersData from "@/models/UsersData"
 import connectDB from "@/config/connectDB"
-import { revalidatePath } from "next/cache" // Correct import for revalidating
-import bcrypt from "bcryptjs" // Highly recommended for security
+import { revalidatePath } from "next/cache"
+import bcrypt from "bcryptjs"
 import z from "zod"
 
-
-
-
-
-// Define the schema
+// Schema-Definition auf Deutsch
 const registerSchema = z.object({
-  email: z.email("Invalid email address").toLowerCase(),
-  password : z.string()
-  .min(8 , "Password must be at least 8 characters")
-  .max(20,"Password cannot exceed 20 characters"),
+  email: z.email("Ungültige E-Mail-Adresse").toLowerCase(),
+  password: z.string()
+    .min(8, "Das Passwort muss mindestens 8 Zeichen lang sein")
+    .max(20, "Das Passwort darf maximal 20 Zeichen lang sein"),
+  confirmPassword: z.string(),
+  vorname: z.string().min(2, "Vorname ist zu kurz").max(100, "Vorname ist zu lang"),
+  nachname: z.string().min(2, "Nachname ist zu kurz").max(100, "Nachname ist zu lang"),
+  phone: z.string()
+    .regex(/^\+?[0-9]+$/, "Die Telefonnummer darf nur Ziffern enthalten")
+    .min(8, "Telefonnummer ist zu kurz")
+    .max(20, "Telefonnummer ist zu lang")
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwörter stimmen nicht überein",
+  path: ['confirmPassword']
+})
 
-  confirmPassword : z.string() ,
-  vorname : z.string().min(2 , "First name is too short").max(100 , "First name is too long") ,
-  nachname : z.string().min(2 , "Last name is too short").max(100 , "Last name is too long") ,
+export const registerAction = async (_prevState, formData) => {
+  const rawData = {
+    email: formData.get('email'),
+    password: formData.get('password'),
+    confirmPassword: formData.get('confirmPassword'),
+    vorname: formData.get('vorname'),
+    nachname: formData.get('nachname'),
+    phone: formData.get('phone')
+  }
 
-  phone : z.string()
-  .regex(/^\+?[0-9]+$/, "Phone number must contain only digits")
-  .min(8 , "Phone number is too short") 
-  .max(20 , "Phone number is too long")
-}).refine((data) => data.password === data.confirmPassword , {
-  message:"Passwords do not match",
-  path:['confirmPassword'] // show errro
-}) 
+  // Validierung mit Zod
+  const validation = registerSchema.safeParse(rawData)
+  if (!validation.success) {
+    const firstError = validation.error.errors[0]?.message || "Validierungsfehler aufgetreten";
+    return { error: true, message: firstError }
+  }
 
-export const registerAction = async (prevState, formData) => {
-  
-  // Extract data from formData
-const rawData = {
-  email:formData.get('email'),
-  password : formData.get('password') ,
-  confirmPassword : formData.get('confirmPassword') ,
-  vorname : formData.get('vorname') ,
-  nachname : formData.get('nachname') ,
-  phone : formData.get('phone')
-}
-
-
-// validation with zod
-const validation = registerSchema.safeParse(rawData)
-if(!validation.success){
-  const firstError = validation.error.errors[0].message;
-  return {error : true , message : firstError}
-}
-
-// get data from validation
-const {email , password , phone , vorname , nachname} = validation.data
+  const { email, password, phone, vorname, nachname } = validation.data
 
   try {
     await connectDB();
 
-    // 3. Normalize email 
     const normalizedEmail = email.trim().toLowerCase();
     const userExists = await UsersData.findOne({ email: normalizedEmail }).select("_id").lean();
-     
+    
     if (userExists) {
-      return {
-        error: true,
-        message: "User already exists",
-      };
+      return { error: true, message: "Benutzer existiert bereits" };
     }
 
-    // 4. Secure password hashing bcryptjs
+    // Passwort-Hashing
     const hashedPassword = await bcrypt.hash(password, 12);
     const userCount = await UsersData.countDocuments();
-    const role = userCount === 0 ? "admin" : "user" ;
-    
+    const role = userCount === 0 ? "admin" : "user";
 
-
-    // 5. Create user record
     const newUser = await UsersData.create({
       email: normalizedEmail,
       password: hashedPassword,
       phone,
-      name: vorname ,
-      familyName : nachname ,
-      role  // First user is admin
+      name: vorname.trim(),
+      familyName: nachname.trim(),
+      role
     });
 
- //. Clear cache for the registration path
-    revalidatePath("/" , 'layout');
+    revalidatePath("/", 'layout');
 
     return {
       error: false,
-      message: "Registration successful! Please login with your credentials.",
-      role : newUser.role,
+      message: "Registrierung erfolgreich! Bitte melden Sie sich an.",
+      role: newUser.role,
+      timestamp:Date.now()
     };
   } catch (error) {
-    return {
-      error: true,
-      message: "Internal server error",
-     
-    };
+    console.error("Registrierungsfehler:", error);
+    return { error: true, message: "Interner Serverfehler" };
   }
 };

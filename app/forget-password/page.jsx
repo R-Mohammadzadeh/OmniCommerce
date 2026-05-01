@@ -1,81 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useActionState , useEffect} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast, Toaster } from "sonner";
+import {de} from '@/dictionaries/de'
+import { resetPasswordAction , sendOtpAction } from "../actions/resetPasswordAction";
+
+
+
 
 export default function ForgotPassword() {
-const [step, setStep] = useState(1); // 1: Email, 2: OTP & New Password
+const dict = de.forgotPassword;    
+const [step, setStep] = useState(1); // 1: E-Mail, 2: OTP & Neues Passwort
 const [email, setEmail] = useState("");
-const [otp, setOtp] = useState("");
-const [newPassword, setNewPassword] = useState("");
-const [loading, setLoading] = useState(false);
 
-// Step 1: Send OTP to Email
-const handleSendOTP = async (e) => {
-e.preventDefault();
-setLoading(true);
+// Action-Status für beide Schritte
+const [sendState , sendAction , isSendPending] = useActionState(sendOtpAction , null) ;
+const [resetState , resetAction , isResetPending] = useActionState(resetPasswordAction ,null)
 
-try {
-// Make API call to send OTP to the provided email address.  
-const res = await fetch("/api/auth/send-otp", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ email: email.toLowerCase().trim() }),
-});
+// Überwachung für Schritt 1: OTP Senden
+useEffect(() => {
+  if(sendState){
+    if(sendState.error){
+        toast.error(sendState.message)
+    }else{
+        toast.success(sendState.message)
+        setStep(2) // Zum Passwort-Schritt wechseln
+    }
+  }  
+} , [sendState])
 
-const data = await res.json();
 
-if (res.ok) {
-toast.success("Verification code sent!");
-setStep(2);
-} else {
-toast.error(data.error || "User not found");
+// Überwachung für Schritt 2: Passwort Zurücksetzen
+useEffect(() => {
+if(resetState){
+    if(resetState.error){
+        toast.error(resetState.message)
+    }else{
+        toast.success(resetState.message)
+        setTimeout(() => (window.location.href = '/login'), 2000) ;
+    }
 }
-} catch (error) {
-toast.error("Network error. Try again.");
-} finally {
-setLoading(false);
-}
-};
+}, [resetState])
 
-// Step 2: Verify OTP & Reset Password
-const handleResetPassword = async (e) => {
-e.preventDefault();
-setLoading(true);
 
-try {
-console.log("FRONTEND SENDING:", { email, otp, newPassword });
-const res = await fetch("/api/auth/reset-password", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ 
-    email: email.toLowerCase().trim(), 
-    otp: otp.trim(), 
-    newPassword: newPassword 
-}),
-});
 
-const data = await res.json();
-
-if (res.ok) {
-toast.success("Password reset successfully!");
-
-setTimeout(() => (window.location.href = "/login"), 2000);
-} else {
-toast.error(data.error || "Invalid or expired code");
-}
-} catch (error) {
-toast.error("Something went wrong");
-} finally {
-setLoading(false);
-}
-};
 
 return (
 <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6">
 
-<Toaster richColors position="top-center" />
+<Toaster richColors position="top-center" visibleToasts={1} />
 
 <motion.div
 layout
@@ -91,25 +65,26 @@ className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 da
         exit={{ opacity: 0, x: 20 }}
         transition={{ duration: 0.3 }}
     >
-        <h2 className="text-2xl font-black mb-2 text-slate-900 dark:text-white">Forgot Password?</h2>
+        <h2 className="text-2xl font-black mb-2 text-slate-900 dark:text-white">{dict.step1.title}</h2>
         <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">
-        Enter your email and we'll send a 6-digit code.
+       {dict.step1.desc}
         </p>
 
-        <form onSubmit={handleSendOTP} className="space-y-4">
+        <form action={sendAction} className="space-y-4">
         <input
-            type="email"
+            type="email" 
+            name="email"
             required
-            placeholder="Your Email"
+            placeholder={dict.step1.placeholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-5 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-blue-500 transition-all outline-none"
         />
         <button
-            disabled={loading}
+            disabled={isSendPending}
             className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-blue-500/30"
         >
-            {loading ? "Sending..." : "Get OTP Code"}
+            {isSendPending ? dict.step1.sending : dict.step1.button}
         </button>
         </form>
     </motion.div>
@@ -122,36 +97,33 @@ className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 da
         exit={{ opacity: 0, x: -20 }}
         transition={{ duration: 0.3 }}
     >
-        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Verify OTP</h2>
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{dict.step2.title}</h2>
         <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
-        Code sent to: <span className="text-blue-500 font-medium">{email}</span>
+       {dict.step2.sentTo} <span className="text-blue-500 font-medium">{email}</span>
         </p>
 
-        <form onSubmit={handleResetPassword} className="space-y-4">
+        <form action={resetAction} className="space-y-4">
+         <input type="hidden" name="email" value={email} />   
         <input
             type="text" name="otp-code" autoComplete="one-time-code"
             required
             maxLength={6}
-            placeholder="6-Digit Code (e.g. 123456)"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
+            placeholder={dict.step2.otpPlaceholder}
             className="w-full px-5 py-4 text-center text-2xl tracking-[0.3em] font-mono rounded-2xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-blue-500 outline-none"
         />
 
-        <input name="new-password" autoComplete="new-password"
+        <input name="new-Password" autoComplete="new-password"
             type="password"
             required
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder={dict.step2.newPassPlaceholder}
             className="w-full px-5 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-blue-500 outline-none"
         />
 
         <button
-            disabled={loading}
+            disabled={isResetPending}
             className="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-green-500/30"
         >
-            {loading ? "Updating..." : "Reset Password"}
+            {isResetPending ?dict.step2.updating : dict.step2.button}
         </button>
 
         <button
@@ -159,7 +131,7 @@ className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 da
             type="button"
             onClick={() => setStep(1)}
         >
-            Back to Email
+            {dict.step2.back}
         </button>
         </form>
     </motion.div>

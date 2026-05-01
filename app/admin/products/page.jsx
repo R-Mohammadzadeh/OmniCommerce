@@ -18,7 +18,7 @@ return (
         className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl hover:scale-105 transition-all font-bold shadow-lg shadow-blue-500/20"
     >
         <HiOutlineArrowLeft />
-        My Dashbord
+        Mein Dashboard
     </Link>
  </div>
 

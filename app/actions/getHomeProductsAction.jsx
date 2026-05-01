@@ -19,7 +19,7 @@ const targetCategory = ["Camera", "PlayStation", "Tablet" , "Laptop" , "Mobile"]
 const products = await ProductsData.find(
     {category : { $in : targetCategory.map((cat) => new RegExp(`^${cat}$` , 'i'))}})
 .sort({createdAt : -1})
-.limit(20)
+.limit(50)
 .lean()
 
 // 3. Leere Ergebnisse angemessen behandeln

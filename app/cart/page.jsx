@@ -7,12 +7,13 @@ import { HiOutlineTrash, HiMinus, HiPlus } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { createCheckoutAction } from "../actions/stripeActions";
 
 
 export default function CartPage() {
 
 
-const { cart, removeFromCart, addToCart, clearCart , decreaseQuantity } =useCartStore(); 
+const { cart, removeFromCart, addToCart, clearCart , decreaseQuantity } = useCartStore(); 
 const [mounted, setMounted] = useState(false);
 const [loading , setLoading] = useState(false)
 
@@ -23,71 +24,54 @@ setMounted(true);
 
 const totalPrice = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1),0);
 
-
-
-
-
+// Optimierte Checkout-Funktion mit Server Action
 const handleCheckout = async () => {
-    console.log("Current cart content:", cart);
     if (cart.length === 0) {
-    alert("Your cart is empty!");
+    toast.error("Ihr Warenkorb ist leer!");
     return;
   }
  try{
 setLoading(true)
+// Aufruf der Server Action statt Fetch
+   const result = await createCheckoutAction(cart)
 
-   const response = await fetch('/api/checkout' , {
-        method:'POST' ,
-        headers :{'Content-Type': 'application/json'},
-        body:JSON.stringify({cartItems : cart})
-    })
-console.log("Response status:", response.status);
-if(!response.ok){
-    const errorData = await response.json() ;
-    throw new Error (errorData || 'Server error')
+if(result.error){
+    toast.error(result.message)
+}else if (result.url){
+    // Weiterleitung zum sicheren Stripe-Zahlungsportal
+window.location.href=result.url
 }
-
-
-    const data = await response.json()
-    if(data.url){
-        window.location.href = data.url // Den Benutzer zum Bankportal weiterleiten
-    }else{
-        console.error('Payment Error' , data.error) ;
-        toast.error('Something went wrong with the checkout.')
-    }
  }
  catch(err){
 console.error("Checkout Request Failed:", err)
+toast.error("Ein unerwarteter Fehler ist aufgetreten.")
  }finally{
     setLoading(false)
  }
 }
-
-
-
 
 if (!mounted) return null;
 return (
 <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pt-24 pb-12 px-4 transition-colors duration-300">
 <div className="max-w-6xl mx-auto">
 <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-b dark:border-slate-800 pb-4">
-Your Shopping Cart
+ Warenkorb
 </h1>
 
 {cart.length === 0 ? (
 <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border dark:border-slate-800">
-<h2 className="text-xl text-gray-500 mb-6 font-medium">Your cart is empty!</h2>
+<h2 className="text-xl text-gray-500 mb-6 font-medium">Ihr Warenkorb ist leer!</h2>
 <Link 
     href="/" 
     className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-full transition-all inline-block shadow-lg shadow-blue-500/20"
 >
-    Back to Store
+    Zurück zum Store
 </Link>
 </div>
 ) : (
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-{/* List of items */}
+{/* Artikelliste */}
 <div className="lg:col-span-2 space-y-4">
     <AnimatePresence mode='popLayout'>
     {cart.map((item) => (
@@ -101,7 +85,7 @@ Your Shopping Cart
         >
         <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-lg">
             <Image
-            // Check if images exist, otherwise use placeholder
+            // Prüfen, ob Bilder vorhanden sind, andernfalls Platzhalter verwenden
             src={item.image && item.image.length > 0 ? item.image[0] : "/image/placeholder.png"}
             alt={item.name}
             fill
@@ -149,7 +133,7 @@ Your Shopping Cart
     onClick={clearCart}
     className="text-sm text-gray-400 hover:text-red-500 transition-colors mt-2"
     >
-    Clear entire cart
+   Warenkorb leeren
     </button>
 </div>
 
@@ -157,20 +141,20 @@ Your Shopping Cart
 {/* Summary Sidebar */}
 <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-md border dark:border-slate-800 h-fit sticky top-24">
     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-        Order Summary
+       Bestellübersicht
     </h2>
     
     <div className="space-y-4 mb-6">
         <div className="flex justify-between text-gray-600 dark:text-gray-400">
-            <span>Subtotal</span>
+            <span>Zwischensumme</span>
             <span className="font-medium">€{totalPrice.toLocaleString()}</span>
         </div>
         <div className="flex justify-between text-gray-600 dark:text-gray-400 border-b dark:border-slate-800 pb-4">
-            <span>Shipping</span>
+            <span>Versand</span>
             <span className="text-green-500 font-bold text-sm">FREE</span>
         </div>
         <div className="flex justify-between text-xl font-extrabold text-slate-900 dark:text-white">
-            <span>Total</span>
+            <span>Gesamt</span>
             <span>€{totalPrice.toLocaleString()}</span>
         </div>
     </div>
@@ -181,11 +165,11 @@ Your Shopping Cart
         disabled={loading}
         className={`w-full ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-95 text-center`}
     >
-        {loading ? "Connecting to Stripe..." : "Proceed to Checkout"}
+        {loading ? "Verbindung zu Stripe..." : "Zur Kasse"}
     </button>
     
     <p className="text-[10px] text-gray-400 text-center mt-4 uppercase tracking-widest">
-        Secure SSL Checkout
+        Sicherer SSL-Checkout
     </p>
 </div>
 

@@ -4,11 +4,12 @@ import { useActionState, useEffect, useRef } from "react";
 import { addProductAction } from "./action";
 import Link from "next/link";
 // import { addProductAction } from "@/app/product/productAction";
-
+import {de} from '@/dictionaries/de'
 
 
 export default function AddProductPage() {
 
+const dict = de.admin.addProduc 
 
 const [state, formAction, isPending] = useActionState(addProductAction, null);
 const formRef = useRef(null);
@@ -26,8 +27,8 @@ return (
 
 {/* Header Section */}
 <div className="bg-slate-800 p-6">
-<h1 className="text-2xl font-bold text-white text-center">Add New Product</h1>
-<p className="text-slate-300 text-center text-sm mt-1">Fill in the details to list a new item</p>
+<h1 className="text-2xl font-bold text-white text-center">{dict.title}</h1>
+<p className="text-slate-300 text-center text-sm mt-1">{dict.subtitle}</p>
 </div>
 
 <form action={formAction} className="p-8 space-y-6" ref={formRef} >
@@ -44,7 +45,7 @@ return (
 
 {/* Product Name */}
 <div className="flex flex-col gap-2 ">
-<label className="text-sm font-semibold text-gray-700 dark:text-white ">Product Name</label>
+<label className="text-sm font-semibold text-gray-700 dark:text-white ">{dict.form.name}</label>
 <input 
 name="name" 
 type="text" 
@@ -56,23 +57,23 @@ required
 
 {/* Category */}
 <div className="flex flex-col gap-2  ">
-<label className="text-sm font-semibold text-gray-700 dark:text-white ">Category</label>
+<label className="text-sm font-semibold text-gray-700 dark:text-white ">{dict.form.category}</label>
 <select name="category" required
 className="w-full py-2 px-4 border dark:bg-blue-950 dark:text-white 
  border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
 
-<option value="">select Category</option>
-<option value="Laptop">Laptop</option>
-<option value="Camera">Camera</option>
-<option value="Mobile">Mobile</option>
-<option value="Tablet">Tablet</option>
-<option value="Playstation">Playstation</option>
+<option value="">{dict.form.selectCategory}</option>
+<option value="Laptop">{dict.categories.laptop}</option>
+<option value="Camera">{dict.categories.camera}</option>
+<option value="Mobile">{dict.categories.mobile}</option>
+<option value="Tablet">{dict.categories.tablet}</option>
+<option value="Playstation">{dict.categories.playstation}</option>
 
 </select>
 </div>
 {/* brand */}
 <div className="flex flex-col gap-2">
-    <label className="text-sm dark:text-white font-semibold text-gray-700">Brand</label>
+    <label className="text-sm dark:text-white font-semibold text-gray-700">{dict.form.brand}</label>
 <input 
 name="brand" 
 placeholder="e.g. Asus, Sony, Apple" 
@@ -83,7 +84,7 @@ required
 
 {/* Price */}
 <div className="flex flex-col gap-2">
-<label className="text-sm dark:text-white font-semibold text-gray-700">Price ($)</label>
+<label className="text-sm dark:text-white font-semibold text-gray-700">{dict.form.price}</label>
 <input 
 name="price" 
 type="number" 
@@ -95,7 +96,7 @@ required
 
 {/* Stock */}
 <div className="flex flex-col gap-2">
-<label className="text-sm dark:text-white font-semibold text-gray-700">Stock Quantity</label>
+<label className="text-sm dark:text-white font-semibold text-gray-700">{dict.form.stock}</label>
 <input 
 name="stock" 
 type="number" 
@@ -108,7 +109,7 @@ required
 
 {/* Description - Full Width */}
 <div className="flex flex-col gap-2">
-<label className="text-sm font-semibold dark:text-white text-gray-700">Description</label>
+<label className="text-sm font-semibold dark:text-white text-gray-700">{dict.form.description}</label>
 <textarea 
 name="description" 
 rows="4" 
@@ -120,7 +121,7 @@ required
 
 {/* Image URL */}
 <div className="flex flex-col gap-2">
-<label className="text-sm font-semibold dark:text-white text-gray-700">Image URL</label>
+<label className="text-sm font-semibold dark:text-white text-gray-700">{dict.form.image}</label>
 <input 
 name="image" type="file" accept="image/*" required  
 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
@@ -137,16 +138,16 @@ className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounde
 <span className="flex items-center justify-center gap-2">
 {/* Simple Spinner */}
 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-Processing...
+{dict.form.processing}
 </span>
-) : "Create Product Listing"}
+) : dict.form.submit}
 </button>
 </form>
 </div>
 <button className=" max-w-3xl mx-auto mt-8 flex items-center gap-2
  px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-200 transition-colors text-sm ">
  <Link href="/admin" className=" text-center  text-sm text-gray-600 hover:text-gray-800">
-&#8592; Back to Dashboard
+&#8592; {dict.form.back}
 </Link>
 </button>
 </div>

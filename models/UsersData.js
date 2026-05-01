@@ -52,6 +52,9 @@ type:String,
 otpExpires :{
 type:Date,    
 },
+lastLogin:{
+    type:Date,
+},
 reviews : [ReviewSchema]
 },{timestamps:true})
 

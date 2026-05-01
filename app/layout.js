@@ -36,7 +36,7 @@ export default async function RootLayout({ children }) {
        className={`${geistSans.variable} ${geistMono.variable}
         bg-white dark:bg-slate-950 text-slate-900 dark:text-white 
          antialiased min-h-screen flex flex-col`}>
-           <Toaster richColors duration={3000}  position="top-center"  />
+           <Toaster richColors duration={3000}  position="top-center" visibleToasts={1} />
         <Navbar user={user} />
         <main className="flex-1">
           {children}

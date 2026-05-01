@@ -8,27 +8,26 @@ import { z} from 'zod'
 
 // (Schema)
 const profileSchema = z.object({
-  name: z.string().trim().min(3 ,"Name must be at least 3 characters"),
-  familyName:z.string().trim().min(3,"Family name is too short"),
-  email:z.email("Please enter a valid email address").trim(),
-  phone:z.string().trim().min(10, "Phone number must be at least 10 digits").regex(/^(\+49|0)[1-9][0-9]{8,13}$/,"Please enter a valid German phone number (e.g., +49... or 0...)"),
-  stadt:z.string().trim().min(2,"City name is required"),
-  strasse:z.string().trim().min(2,"Street name is required") ,
-  PLZ:z.string().regex(/^\d{5}$/ , "Postal code must be 5 digits"),
-  Hausnummer:z.string().trim().min(1,"House number is required")
+  name: z.string().trim().min(3 ,"Name must be at least 3 charactersDer Name muss mindestens 3 Zeichen lang sein"),
+  familyName:z.string().trim().min(3,"Der Nachname ist zu kurz"),
+  email:z.email("Bitte geben Sie eine gültige E-Mail-Adresse ein").trim(),
+  phone:z.string().trim().min(10, "Die Telefonnummer muss mindestens 10 Stellen haben").regex(/^(\+49|0)[1-9][0-9]{8,13}$/,"Please enter a valid German phone number (e.g., +49... or 0...)"),
+  stadt:z.string().trim().min(2,"Stadt ist erforderlich"),
+  strasse:z.string().trim().min(2,"Straße ist erforderlich") ,
+  PLZ:z.string().regex(/^\d{5}$/ , "Die Postleitzahl muss 5 Stellen haben"),
+  Hausnummer:z.string().trim().min(1,"Hausnummer ist erforderlich")
 })
 
 
 
-export async function updateProfileAction(formData) {
+export async function EditeProfileAction(formData) {
 
   try {
 await connectDB();
 
-// 
+
 const rawData = Object.fromEntries(formData.entries())
 
-// 
 const validation = profileSchema.safeParse(rawData)
 
 
@@ -37,19 +36,20 @@ return {error : true , message:validation.error.errors[0].message}
 
 }
 
-// 
+
 const validatedData = validation.data
 
-// Next-Auth
+// Identitätsprüfung
   const session = await auth()
   if(!session || !session.user){
-    return {error: true , message : 'Unauthorized! Please login again.'}
+    return {error: true , message : 'Nicht autorisiert! Bitte melden Sie sich erneut an.'}
   }
 
 const userId = session.user.id;
 
 
-// --------------------
+
+// Datenbank aktualisieren
     const updatedUser = await UsersData.findByIdAndUpdate(
       userId,
       {
@@ -57,11 +57,14 @@ const userId = session.user.id;
       name:validatedData.name,
       familyName:validatedData.familyName,
       phone:validatedData.phone,
-      email: validatedData.email,
-      "address.stadt":validatedData.stadt ,
-      "address.strasse":validatedData.strasse,  
-      "address.PLZ":validatedData.PLZ,     
-      "address.Hausnummer":validatedData.Hausnummer,    
+      email: validatedData.email.toLowerCase(),
+      adresse:{
+      stadt:validatedData.stadt ,
+      strasse:validatedData.strasse,  
+      PLZ:validatedData.PLZ,     
+      Hausnummer:validatedData.Hausnummer, 
+      }
+         
           
         },
       },
@@ -69,16 +72,16 @@ const userId = session.user.id;
     );
 
     if (!updatedUser) {
-      return { error: true, message: "User not found!" };
+      return { error: true, message: "Benutzer nicht gefunden!" };
     }
 
     revalidatePath("/" , 'layout');
-    revalidatePath('/dashbord')
+    revalidatePath('/dashboard')
 
-    return { success: true, message: "Profile updated successfully! " };
+    return { success: true, message: "Profil erfolgreich aktualisiert! " };
     
   } catch (error) {
-    console.error("Update Error:", error.message);
-    return { error: true, message: "Failed to update profile.Please check your data." };
+    console.error("Aktualisierungsfehler:", error.message);
+    return { error: true, message: "Fehler beim Aktualisieren. Bitte überprüfen Sie Ihre Daten." };
   }
 }
