@@ -33,7 +33,7 @@ export const de = {
         },
         mission : {
             title : "Unsere Mission",
-            description: "Wir möchten unseren Kunden eine nahtlose Schnittstelle و hochwertige Produkte bieten, die mit Integrität und Geschwindigkeit geliefert werden. Jeder Klick soll sich für Sie lohnen."
+            description: "Wir möchten unseren Kunden ein nahtloses Einkaufserlebnis und hochwertige Produkte bieten, die mit Integrität und Geschwindigkeit geliefert werden. Jeder Klick soll sich für Sie lohnen."
         },
         values : [
             {title: "Kunde zuerst", desc: "Ihre Zufriedenheit steht bei jedem Schritt an erster Stelle." },
@@ -85,7 +85,7 @@ export const de = {
     forgotPassword:{
     step1:{
     title: "Passwort vergessen?",
-    desc: "Geben Sie Ihre E-Mail ein و wir senden Ihnen einen 6-stelligen Code.",
+    desc: "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen 6-stelligen Code.",
     placeholder: "Ihre E-Mail",
     button: "OTP-Code erhalten",
     sending: "Wird gesendet..."
