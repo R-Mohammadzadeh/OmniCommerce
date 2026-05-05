@@ -125,10 +125,10 @@ MY<span className="text-blue-600">STORE</span>
 </div>
 
 {/* Desktop Menu */}
-<div className="hidden md:flex items-center gap-6 h-full">
+<div className="hidden md:flex items-center h-full  ">
 {navItems.map((item) => (
 <div 
-className="relative h-full flex items-center" 
+className="relative h-full flex items-center px-3 text-nowrap" 
 key={item.name}
 onMouseEnter={() => setActiveMenu(item.name)} 
 onMouseLeave={() => setActiveMenu(null)}
