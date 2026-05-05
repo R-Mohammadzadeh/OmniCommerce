@@ -3,48 +3,52 @@
 import connectDB from "@/config/connectDB"
 import ProductsData from "@/models/ProductsData"
 
-
-
-
-
+/**
+ * Ruft eine Auswahl an Produkten für die Startseite ab.
+ * Filtert nach bestimmten Kategorien und optimiert die Datenmenge für eine schnelle Anzeige.
+ */
 export async function getHomeProducts() {
-try{  
-  await connectDB()
+  try {
+    // 1. Verbindung zur MongoDB herstellen
+    await connectDB()
 
-//1. Define target categories for the home page sliders 
-const targetCategory = ["Camera", "PlayStation", "Tablet" , "Laptop" , "Mobile"] ;
+    /**
+     * 2. Definition der Ziel-Kategorien für die Homepage.
+     * Nur Produkte aus diesen Bereichen werden geladen.
+     */
+    const targetCategory = ["camera", "playstation", "tablet", "laptop", "mobile"]
 
+    // 3. Datenbankabfrage mit Optimierungen
+    const products = await ProductsData.find({ category: { $in: targetCategory } })
+      .select('name price image category rating numReviews stock')
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean()
 
-// 2. Fetch products from the database that belong to the target categories, sorted by creation date (newest first) 
-const products = await ProductsData.find(
-    {category : { $in : targetCategory.map((cat) => new RegExp(`^${cat}$` , 'i'))}})
-.sort({createdAt : -1})
-.limit(50)
-.lean()
-
-// 3. Leere Ergebnisse angemessen behandeln
-if(!products || products.length === 0){
-    console.warn("No products found for the specified home categories.")
-    return{
-        success : false ,
-        products:[],
-        message:"No products available at the moment."
+    // 4. Fallback, falls keine Produkte gefunden wurden
+    if (!products || products.length === 0) {
+      console.warn("Keine Produkte für die Homepage-Kategorien gefunden.")
+      return {
+        success: false,
+        products: [],
+        message: "Aktuell sind keine Produkte verfügbar."
+      }
     }
+
+// 5. Datenbereinigung:
+    
+    return {
+      success: true,
+      products: JSON.parse(JSON.stringify(products)),
+    }
+
+  } catch (error) {
+    // Fehlerprotokollierung bei Verbindungsproblemen oder Datenbankfehlern
+    console.error('Fehler beim Abrufen der Homepage-Produkte:', error)
+    return {
+      success: false,
+      products: [],
+      error: "Produkte konnten nicht geladen werden. Bitte prüfe deine Verbindung."
+    }
+  }
 }
-
-return {
-    success: true ,
-    products : JSON.parse(JSON.stringify(products)) , // to handle date serialization
-};
-
-}
-catch(error){
-    console.error('Fetch Products Error :' , error)
-    return {products : [] , totalPage : 0 , success:false ,error: "Failed to load products. Please check your connection."}
-}
-
-}
-
-
-
-

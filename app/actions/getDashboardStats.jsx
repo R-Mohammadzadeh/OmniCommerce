@@ -47,6 +47,6 @@ return{
     }
     catch(error){
 console.error("Dashboard Stats Error:" , error)
-return null
+return { success: false, error: error.message }
     }
 }

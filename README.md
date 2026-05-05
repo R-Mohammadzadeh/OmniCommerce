@@ -1,85 +1,271 @@
-# 🛒 SwiftDash - Full-Stack E-Commerce-Lösung
+# 🛒 Reza Store – Premium Gadgets Shop
 
-## 💡 Projektbeschreibung
-SwiftDash ist eine moderne Full-Stack E-Commerce-Plattform, die mit **Next.js 15** entwickelt wurde. Das Ziel des Projekts ist es, eine extrem schnelle **Single-Page-Application (SPA)** bereitzustellen, die Server-Side Rendering (SSR) nutzt. Es bietet eine nahtlose Integration von Frontend und Backend, ein robustes Admin-Dashboard und eine skalierbare Datenbankstruktur mit MongoDB.
+Ein moderner E-Commerce-Shop für Premium-Gadgets, gebaut mit **Next.js 15**, **MongoDB** und **Stripe**.
 
-Besonderer Fokus liegt auf:
-- **Performance**: Minimale Ladezeiten durch optimierte API-Routen.
-- **Benutzererfahrung**: Ein intuitiver Flow vom Durchsuchen der Produkte bis zum Checkout.
-- **Skalierbarkeit**: Dank MongoDB kann die Produktdatenbank problemlos mit dem Unternehmen mitwachsen.
+---
 
-## 🚀 Kernfunktionen
-- **Produktverwaltung**: Vollständiges CRUD-System zum Hinzufügen, Bearbeiten und Löschen von Produkten.
-- **Admin-Dashboard**: Zentrale Oberfläche zur Verwaltung von Beständen, Bestellungen und Benutzern.
-- **Warenkorb-System**: Dynamische Verwaltung von Produkten im Warenkorb mit **Redux Toolkit**.
-- **Sichere Zahlungsabwicklung**: Integration von modernen Zahlungsmethoden (simuliert), um den gesamten Kaufprozess abzubilden.
-- **Responsive Design**: Vollständig optimiert für mobile Geräte, Tablets und Desktops mit **Tailwind CSS**.
+## 🚀 Tech-Stack
 
-## 🛠️ Technologie-Stack
-- **Frontend**: Next.js 15 (App Router), React, Tailwind CSS
-- **State Management**: Redux Toolkit
-- **Backend**: Next.js API Routes (Serverless Functions)
-- **Datenbank**: MongoDB mit Mongoose
-- **Icons**: Lucide-React
+| Technologie | Version | Beschreibung |
+|---|---|---|
+| [Next.js](https://nextjs.org/) | 15.5 | App Router, Server Actions, Turbopack |
+| [React](https://react.dev/) | 19.1 | UI-Framework |
+| [MongoDB](https://www.mongodb.com/) + Mongoose | 9.5 | Datenbank |
+| [NextAuth v5](https://authjs.dev/) | 5.0-beta | Authentifizierung (OTP-basiert) |
+| [Stripe](https://stripe.com/) | 22.0 | Zahlungsabwicklung |
+| [Cloudinary](https://cloudinary.com/) | 2.9 | Bild-Upload & Hosting |
+| [Zustand](https://zustand-demo.pmnd.rs/) | 5.0 | State Management (Cart, Wishlist, Theme) |
+| [Tailwind CSS](https://tailwindcss.com/) | 4.2 | Styling |
+| [Framer Motion](https://www.framer.com/motion/) | 12 | Animationen |
+| [Recharts](https://recharts.org/) | 3.8 | Admin-Dashboard Charts |
+| [Nodemailer](https://nodemailer.com/) | 8.0 | OTP-E-Mails versenden |
+| [Swiper](https://swiperjs.com/) | 12 | Produkt-Slider |
 
-## 📦 Installation und Setup
+---
 
-1. Klonen Sie das Repository:
-   ```bash
-   git clone [https://github.com/R-Mohammadzadeh/my-app.git](https://github.com/R-Mohammadzadeh/my-app.git)
-2. Installieren Sie die Abhängigkeiten:
-   ```bash
-   cd my-app
-   ```
-3. Starten Sie die Anwendung:
-   ```bash
-    npm install
-    ```
-4. Starten Sie die Anwendung:
-   ```bash
-    npm run dev
-    ```   
-## 📂 Verzeichnisstruktur
-```my-app/
-├── README.md   
-├── package.json
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── App.js
-│   └── index.js
-├── public/
-│   ├── index.html
-│   └── assets/
-├── .gitignore
-└── LICENSE
+## 📋 Voraussetzungen
+
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- MongoDB-Datenbank (lokal oder [MongoDB Atlas](https://www.mongodb.com/atlas))
+- Stripe-Konto
+- Cloudinary-Konto
+- E-Mail-Konto für Nodemailer (z. B. Gmail)
+
+---
+
+## ⚙️ Installation
+
+### 1. Repository klonen
+
+```bash
+git clone <repo-url>
+cd my-app
 ```
 
-⚙️ Umgebungsvariablen (.env)
-Um das Projekt lokal auszuführen, erstellen Sie eine .env-Datei im Hauptverzeichnis:
+### 2. Abhängigkeiten installieren
 
-.MONGODB_URI: Ihre MongoDB Verbindungszeichenfolge.
+```bash
+npm install
+```
 
-.NEXT_PUBLIC_API_URL: Die URL Ihrer API.
+### 3. Umgebungsvariablen einrichten
 
-.PAYPAL_CLIENT_ID: (Optional) Für Zahlungsfunktionen.
+Erstelle eine `.env.local` Datei im Root-Verzeichnis:
 
-## 📈 Geplante Features (Roadmap)
--[ ] Zahlungsintegration: Implementierung von Stripe oder PayPal für echte Transaktionen.
+```env
+# Datenbank
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>
 
--[ ] KI-Empfehlungen: Personalisierte Produktvorschläge basierend auf dem Nutzerverhalten.
+# NextAuth
+AUTH_SECRET=<dein-geheimer-schluessel>         # openssl rand -base64 32
+NEXTAUTH_URL=http://localhost:3000
 
--[ ] E-Mail-Benachrichtigungen: Automatische Bestellbestätigungen via Nodemailer.
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
-- **Sichere Zahlungsabwicklung**: Integration von modernen Zahlungsmethoden (simuliert), um den gesamten Kaufprozess vom Warenkorb bis zur erfolgreichen Bestellung abzubilden.
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+
+# Nodemailer (E-Mail für OTP-Versand)
+EMAIL_USER=deine@email.de
+EMAIL_PASS=dein-app-passwort
+
+# Demo-Admin OTP (optional, Standard: 11111)
+DEMO_OTP=11111
+```
+
+### 4. Entwicklungsserver starten
+
+```bash
+npm run dev
+```
+
+Die App ist unter [http://localhost:3000](http://localhost:3000) erreichbar.
+
+---
+
+## 📁 Projektstruktur
+
+```
+my-app/
+├── app/                        # Next.js App Router
+│   ├── page.js                 # Startseite
+│   ├── layout.js               # Root Layout (Navbar, Footer)
+│   ├── actions/                # Server Actions
+│   │   ├── getHomeProductsAction.jsx
+│   │   ├── stripeActions.jsx
+│   │   ├── usersActions.jsx
+│   │   └── ...
+│   ├── admin/                  # Admin-Bereich (geschützt)
+│   ├── cart/                   # Warenkorb
+│   ├── product/                # Produkt-Detailseite
+│   ├── profile/                # Benutzerprofil
+│   ├── login/                  # Login (OTP)
+│   ├── register/               # Registrierung
+│   ├── wishlist/               # Wunschliste
+│   └── ...
+├── Components/                 # Wiederverwendbare Komponenten
+│   ├── Navbar.jsx
+│   ├── Footer.jsx
+│   ├── ProductCard.jsx
+│   ├── HomeSlider.jsx
+│   ├── ProductReviews.jsx
+│   └── ...
+├── models/                     # Mongoose-Schemas
+│   ├── UsersData.js            # Benutzer-Schema
+│   └── ProductsData.js         # Produkt-Schema
+├── lib/                        # Auth-Konfiguration
+│   ├── auth.js                 # NextAuth Setup
+│   ├── auth.config.js          # Auth-Callbacks & Pages
+│   └── authActions.js
+├── store/                      # Zustand Stores
+│   ├── useCartStore.js         # Warenkorb
+│   ├── useWishlistStore.js     # Wunschliste
+│   └── themeStore.js           # Dark/Light Mode
+├── config/
+│   └── connectDB.js            # MongoDB-Verbindung
+├── dictionaries/
+│   └── de.js                   # Deutsche Übersetzungen
+├── utils/
+│   └── Helper.jsx
+└── middleware.js               # Routen-Schutz (Auth)
+```
+
+---
+
+## 🔐 Authentifizierung
+
+Das Login-System basiert auf **OTP (Einmal-Passwort)** per E-Mail – kein klassisches Passwort-Login.
+
+**Login-Ablauf:**
+1. Benutzer gibt E-Mail-Adresse ein
+2. Ein 6-stelliger OTP-Code wird per E-Mail versendet
+3. Benutzer gibt den Code ein und wird eingeloggt
+
+**Rollen:**
+- `user` – Standardbenutzer (Warenkorb, Profil, Bestellungen)
+- `admin` – Zugriff auf Admin-Panel
+
+**Demo-Admin-Konto:**
+```
+E-Mail: demo-admin@test.com
+OTP:    11111  (oder DEMO_OTP aus .env)
+```
+
+---
+
+## 🛡️ Routen-Schutz (Middleware)
+
+| Route | Zugriff |
+|---|---|
+| `/` | Öffentlich |
+| `/product/*` | Öffentlich |
+| `/login` | Nur nicht eingeloggte Nutzer |
+| `/cart`, `/profile`, `/dashboard` | Eingeloggte Nutzer |
+| `/admin/*` | Nur Admins |
+
+---
+
+## 🏪 Features
+
+- **Startseite** – Produkt-Slider nach Kategorien (Kameras, Laptops, Smartphones, Tablets, Gaming)
+- **Produktsuche** – Live-Suche über alle Produkte
+- **Produktdetailseite** – Bilder, Beschreibung, Bewertungen, In den Warenkorb
+- **Warenkorb** – Menge ändern, löschen, Checkout mit Stripe
+- **Wunschliste** – Produkte speichern (Zustand)
+- **Bewertungen** – Sterne-Bewertung & Kommentare (nur eingeloggte Nutzer)
+- **Profil** – Daten bearbeiten, Profilbild hochladen (Cloudinary)
+- **Passwort vergessen** – Reset per OTP-Code
+- **Dark Mode** – System-weite Umschaltung
+- **Cookie-Consent** – DSGVO-konformes Banner
+- **Admin-Panel:**
+  - Dashboard mit Charts (Recharts)
+  - Produkte hinzufügen / bearbeiten / löschen
+  - Benutzerverwaltung
+  - Kategorieübersicht
+
+---
+
+## 🛍️ Produkt-Kategorien
+
+| Kategorie | Slug |
+|---|---|
+| Kameras | `camera` |
+| Laptops | `laptop` |
+| Smartphones | `mobile` |
+| Tablets | `tablet` |
+| Gaming / PlayStation | `playstation` |
+
+---
+
+## 💳 Stripe-Integration
+
+Zahlungen werden über Stripe Checkout abgewickelt. Nach erfolgreichem Checkout wird der Nutzer auf `/success` weitergeleitet.
+
+**Testdaten für Stripe:**
+```
+Kartennummer: 4242 4242 4242 4242
+Datum:        beliebig (z. B. 12/34)
+CVC:          beliebig (z. B. 123)
+```
+
+---
+
+## 🖼️ Bild-Upload (Cloudinary)
+
+Produkt- und Profilbilder werden direkt zu Cloudinary hochgeladen. Die zurückgegebene URL wird in der Datenbank gespeichert.
+
+---
+
+## 🧪 Verfügbare Scripts
+
+```bash
+npm run dev      # Entwicklungsserver starten (Turbopack)
+npm run build    # Produktions-Build erstellen
+npm run start    # Produktions-Server starten
+npm run lint     # ESLint ausführen
+```
+
+---
+
+## 🗄️ Datenbank-Schemas
+
+### User
+| Feld | Typ | Pflicht |
+|---|---|---|
+| `name` | String | ✅ |
+| `email` | String (unique) | ✅ |
+| `password` | String (gehasht) | ✅ |
+| `phone` | String | ✅ |
+| `role` | `user` \| `admin` | – |
+| `image` | String (URL) | – |
+| `otpCode` | String | – |
+| `otpExpires` | Date | – |
+| `lastLogin` | Date | – |
+
+### Produkt
+| Feld | Typ | Pflicht |
+|---|---|---|
+| `name` | String | ✅ |
+| `description` | String | ✅ |
+| `price` | Number | ✅ |
+| `category` | Enum | ✅ |
+| `brand` | String | ✅ |
+| `stock` | Number | – |
+| `image` | String[] | – |
+| `rating` | Number (0–5) | – |
+| `reviews` | Review[] | – |
+
+---
 
 ## 📄 Lizenz
-Dieses Projekt ist unter der MIT-Lizenz lizenziert. Weitere Informationen finden Sie in der [LICENSE](LICENSE) Datei.
-## 📞 Kontakt   
-.Bei Fragen oder Anregungen können Sie mich gerne kontaktieren:
-.E-Mail: reza203393@yahoo.de
-.Telefon: 017647116508
-.GitHub: R-Mohammadzadeh
 
-[🌐 Live Demo](https://omni-commerce-swart.vercel.app/)
+Dieses Projekt ist privat und nicht für die öffentliche Nutzung freigegeben.
+
+---
+
+> Gebaut mit ❤️ – **Reza Mohammadzadeh** © 2026

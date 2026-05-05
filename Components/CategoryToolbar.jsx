@@ -3,61 +3,80 @@
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
+/**
+ * CategoryToolbar Component
+ * Allows users to filter products by brand and sort them via URL query parameters.
+ */
+export default function CategoryToolbar({ slug, brand, sort, allBrands }) {
 
-export default function CategoryToolbar({slug , brand , sort , allBrands}) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-const router = useRouter()
-const pathname = usePathname()
-const searchParams = useSearchParams()
+  // Helper function to update or create a new query string
+  const createQueryString = (name, value) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set(name, value)
+    return params.toString()
+  }
 
-// resresh not loading url
-const handleSort = (value) =>{
-const params = new URLSearchParams(searchParams) ;
-params.set('sort' , value) ;
-router.push(`${pathname}?${params.toString()}`)
-}
+  // Updates the sort parameter in the URL and replaces the current history entry
+  const handleSort = (value) => {
+    router.replace(`${pathname}?${createQueryString("sort", value)}`)
+  }
 
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-6 mb-10 bg-white dark:bg-slate-900 p-5 rounded-2rem shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
 
+      {/* Brands Selection: Horizontal scrollable area for brand filters */}
+      <div className="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+        <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mr-2">
+          Marken:
+        </span>
 
-return (
-<>
-{/* Toolbar: Filters & Sorting */}
-<div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border dark:border-slate-800">
-    
-    {/* Brand Quick Filters */}
-    <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
-    <span className="text-xs font-bold uppercase text-gray-400 mr-2">Brands:</span>
-    <Link 
-        href={`/category/${slug}`}
-        className={`px-4 py-1.5 rounded-full text-sm transition-all ${!brand ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-800'}`}
-    >
-        All
-    </Link>
-    {allBrands.map((b) => (
-        <Link 
-        key={b}
-        href={`/category/${slug}?brand=${b.toLowerCase()}`}
-        className={`px-4 py-1.5 rounded-full text-sm transition-all ${brand === b.toLowerCase() ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-800'}`}
+        <Link
+          href={pathname}
+          className={`px-5 py-2 rounded-full text-sm font-bold transition-all active:scale-95 ${
+            !brand 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+          }`}
         >
-        {b}
+          Alle
         </Link>
-    ))}
-    </div>
 
-    {/* Sort Dropdown or Buttons */}
-    <div className="flex items-center gap-2">
-    <span className="text-xs font-bold uppercase text-gray-400 mr-2">Sort:</span>
-    <select 
-        onChange={(e) => handleSort(e.target.value)}
-        className="bg-transparent text-sm font-medium outline-none cursor-pointer dark:text-white"
-        defaultValue={sort || "newest"}
-    >
-        <option value="newest">Newest</option>
-        <option value="price_asc">Price: Low to High</option>
-        <option value="price_desc">Price: High to Low</option>
-    </select>
+        {allBrands.map((b) => (
+          <Link
+            key={b}
+            href={`${pathname}?${createQueryString("brand", encodeURIComponent(b.toLowerCase()))}`}
+            className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all active:scale-95 ${
+              brand === b.toLowerCase()
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            {b}
+          </Link>
+        ))}
+      </div>
+
+      {/* Sort Selection: Dropdown for ordering products */}
+      <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 px-4 py-2 rounded-xl border border-transparent focus-within:border-blue-500 transition-all">
+        <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
+          Sortierung:
+        </span>
+
+        <select
+          value={sort || "newest"}
+          onChange={(e) => handleSort(e.target.value)}
+          className="bg-transparent text-sm font-bold outline-none cursor-pointer dark:text-white appearance-none"
+        >
+          <option value="newest">Neueste</option>
+          <option value="price_asc">Preis: Aufsteigend</option>
+          <option value="price_desc">Preis: Absteigend</option>
+        </select>
+      </div>
+
     </div>
-</div>
-</>
-)
+  )
 }

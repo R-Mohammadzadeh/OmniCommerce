@@ -11,7 +11,7 @@ export default function ProductAction({ product }) {
   const { wishlist, toggleWishlist } = useWishlistStore();
   
   // Überprüfen, ob das Produkt bereits in der Wunschliste ist
-  const inWishlist = wishlist.some((item) => item._id === product._id);
+  const inWishlist = wishlist.some((item) => item._id.toString() === product._id.toString());
 
   const handleAddToCart = () => {
     if (product.stock <= 0) return;
@@ -24,8 +24,8 @@ export default function ProductAction({ product }) {
       quantity: 1
     });
 
-    toast.success(`${product.name} wurde zum Warenkorb hinzugefügt!`, {
-      description: "Sie können Ihren Einkauf fortsetzen oder zur Kasse gehen.",
+    toast.success("Zum Warenkorb hinzugefügt", {
+      description: product.name
     });
   };
 
@@ -43,6 +43,7 @@ export default function ProductAction({ product }) {
       <button 
         onClick={handleAddToCart} 
         disabled={product.stock <= 0}
+        title={product.stock <= 0 ? 'Nicht verfügbar' : ''}
         className="flex-3 bg-blue-600 hover:bg-blue-700 active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed
         rounded-2xl shadow-xl shadow-blue-500/20 transition-all 
         text-white font-bold py-5 px-8"

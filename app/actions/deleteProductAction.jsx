@@ -5,23 +5,30 @@ import ProductsData from "@/models/ProductsData"
 import { revalidatePath } from "next/cache"
 
 
+export async function deleteProduct(id) {
+  try {
+    // 1. Verbindung zur MongoDB herstellen
+    await connectDB()
 
-export async function  deleteProduct(id) {
+    // 2. Produkt anhand der ID suchen und löschen
+    const deleted = await ProductsData.findByIdAndDelete(id)
 
-try{
-await connectDB()
-await ProductsData.findByIdAndDelete(id)
+    // 3. Fehlerprüfung: Falls die ID nicht existiert
+    if (!deleted) {
+      return { success: false, error: "Produkt nicht gefunden" }
+    }
 
-revalidatePath('/admin/products')
+    /**
+     * 4. Cache-Aktualisierung:
+     * revalidatePath weist Next.js an, die Daten für die Admin-Produktliste
+     * im Hintergrund neu zu laden, damit das gelöschte Produkt sofort verschwindet.
+     */
+    revalidatePath('/admin/products')
 
-return {success : true}
+    // Erfolgsrückmeldung an das Frontend
+    return { success: true }
+  } catch (error) {
+    // Fehlerbehandlung: Gibt die Fehlermeldung für die UI zurück
+    return { success: false, error: error.message }
+  }
 }
-catch(error){
-return {success : false , error:error.message}
-}
-
-
-
-}
-
-

@@ -8,7 +8,8 @@ import ProductsData from "@/models/ProductsData";
 
 
 export async function searchProducts(query) {
-    if(!query || query.length < 2) return [] ;
+    const trimmed = query.trim();
+    if(!trimmed || trimmed.length < 2) return [] ;
 
 try{
 await connectDB()
@@ -16,8 +17,8 @@ await connectDB()
 // Search in name and category using case-insensitive regex
 const products = await ProductsData.find({
     $or:[
-        {name: {$regex:query , $options:'i'}},
-        {category:{$regex:query,$options:'i'}},
+        {name: {$regex:trimmed , $options:'i'}},
+        {category:{$regex:trimmed,$options:'i'}},
     ]
 })
 .limit(5) // Limit results for the dropdown

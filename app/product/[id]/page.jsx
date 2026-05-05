@@ -8,6 +8,9 @@ import { getRelatedProducts } from "@/app/actions/getRelatedProductsAction";
 import HomeSlider from "@/Components/HomeSlider";
 import StarRating from "@/Components/StartRating";
 import ProductReviews from "@/Components/ProductReviews";
+import Image from "next/image";
+import { auth } from "@/lib/auth";
+
 
 // Dynamische Metadaten-Generierung für Produktseiten
 export async function generateMetadata({ params }) {
@@ -32,8 +35,9 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductDetailsPage({ params }) {
   const { id } = await params;
-  await connectDB();
-
+  await connectDB(); 
+  
+const session = await auth()
   const productRaw = await ProductsData.findById(id).lean();
 
   if (!productRaw) {
@@ -41,7 +45,7 @@ export default async function ProductDetailsPage({ params }) {
   }
 
   // Daten für Client-Komponenten vorbereiten
-  const product = JSON.parse(JSON.stringify(productRaw));
+ const product = JSON.parse(JSON.stringify(productRaw))
   const relatedProductsRaw = await getRelatedProducts(product.category, id);
   const relatedProducts = JSON.parse(JSON.stringify(relatedProductsRaw));
 
@@ -63,12 +67,12 @@ export default async function ProductDetailsPage({ params }) {
           {/* 1. Bildgalerie */}
           <div className="sticky top-28 transition-all duration-300 md:pt-10"> 
             <div className="relative aspect-square bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-slate-800 shadow-inner group">
-              <img
+              <Image
                 src={product.image?.[0]?.startsWith('http') 
                   ? product.image[0] 
                   : `/image/${product.category.toLowerCase()}s/${product.image?.[0]}`}
-                alt={product.name}
-                className="w-full h-full object-contain p-12 transition-transform duration-700 group-hover:scale-105"
+                alt={product.name} fill
+                className="object-contain p-12 transition-transform duration-700 group-hover:scale-105"
               />
             </div>
           </div>
@@ -118,7 +122,7 @@ export default async function ProductDetailsPage({ params }) {
               </p>
             </div>
 
-            <ProductAction product={product} />
+            <ProductAction product={product}  />
 
             {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-4 mt-12 border-t dark:border-slate-800 pt-8">
@@ -137,7 +141,7 @@ export default async function ProductDetailsPage({ params }) {
 
         {/* Rezensionen */}
         <div className="mt-20 border-t dark:border-slate-800 pt-16">
-          <ProductReviews product={product} />
+          <ProductReviews product={product} user={session?.user} />
         </div>
 
         {/* Ähnliche Artikel */}

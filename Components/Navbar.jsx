@@ -22,7 +22,7 @@ import { HiOutlineHeart } from "react-icons/hi2";
 const navItems = [
 { name: "Camera", href: "/category/camera", subItems: ["Canon", "Lubitel", "Sony"] },
 { name: "Laptop", href: "/category/laptop", subItems: ["Acer", "Samsung", "HP", "AMD" , "Sony"] },
-{ name: "Tablet", href: "/category/tablet", subItems: ["Acer", "Appel" ,"Samsung"] },
+{ name: "Tablet", href: "/category/tablet", subItems: ["Acer", "Apple" ,"Samsung"] },
 { name: "Mobile", href: "/category/mobile", subItems: ["iPhone", "Samsung", "Xiaomi", "Pixel"] },
 { name: "PlayStation", href: "/category/Playstation", subItems: ["Sony"] },
 { name: "About", href: "/about", subItems: [] },
@@ -37,20 +37,20 @@ const toggleTheme = useThemeStore((state) => state.toggleTheme);
 const wishlist = useWishlistStore((state) => state.wishlist)
 
 
-// state to manage profile dropdown visibility
+// Status zur Verwaltung der Sichtbarkeit des Profil-Dropdowns
 const [profileOpen , setProfileOpen] = useState(false) 
-// To prevent hydration mismatch
+// Um ​​ein Ungleichgewicht im Flüssigkeitshaushalt zu vermeiden
 const [mounted, setMounted] = useState(false); 
 const [menuOpen, setMenuOpen] = useState(false);
 const [activeMenu, setActiveMenu] = useState(null);
 
-// navbar background change on scroll
+// Hintergrund der Navigationsleiste ändert sich beim Scrollen
 const [scrolled, setScrolled] = useState(false);
 
 // Add scroll listener to change navbar background
 useEffect(() => {
 const handleScroll = () => {
-//  adjust the scroll threshold (20) as needed
+// Füge einen Scroll-Listener hinzu, um den Hintergrund der Navigationsleiste zu ändern.
  if(window.scrollY > 20){
   setScrolled(true);
  } else {
@@ -61,40 +61,47 @@ window.addEventListener('scroll', handleScroll);
 return () => window.removeEventListener('scroll', handleScroll);
 }, []);
 
-
-
-// Handle theme changes and ensure dark mode class is applied on mount
 useEffect(() => {
+  setMounted(true)
+},[])
 
-setMounted(true);
+// Designänderungen verarbeiten und sicherstellen, dass die Klasse für den Dunkelmodus beim Mounten angewendet wird.
+useEffect(() => {
 if (theme === 'dark') {
 document.documentElement.classList.add('dark');
 } else {
 document.documentElement.classList.remove('dark');
 }
+}, [theme]);
 
-const handleClickOutside = () => setProfileOpen(false)
+
+useEffect(()=>{
+  if(!profileOpen) return ;
+  const handleClickOutside = () => setProfileOpen(false)
 if(profileOpen){
   window.addEventListener('click' , handleClickOutside)
 }
 return () => window.removeEventListener('click' , handleClickOutside)
-}, [theme , profileOpen]);
+},[profileOpen])
 
 
-// Calculate count only if mounted, otherwise show 0 or null
+
+
+
+// Berechne die Anzahl nur, wenn das Gerät montiert ist, andernfalls zeige 0 oder null an.
 const wishlistCount = mounted ? wishlist.length : 0
 
-// Calculate total items in cart for badge display
+// Berechne die Gesamtzahl der Artikel im Warenkorb für die Badge-Anzeige.
 const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
-// Prevent hydration mismatch by rendering nothing until mounted
+// Verhindert Hydratationsfehler, indem erst nach dem Mounten gerendert wird.
 if (!mounted) return null;
 
 return (
 <nav className={`fixed top-0 left-0 w-full z-60 transition-colors duration-700 ${scrolled ? 'bg-white/50 backdrop-blur-xs shadow-lg py-8 dark:bg-slate-900/90' : 
 'dark:bg-transparent bg-linear-to-r from-slate-500 py-5 dark:border-slate-800'}`}>
 
-<div className="max-w-7xl  mx-auto px-4  h-8 flex items-center justify-between ">
+<div className="max-w-7xl mx-auto px-4 flex items-center justify-between ">
 
 {/* Logo & Mobile Toggle */}
 <div className="flex items-center gap-4 ">
@@ -136,13 +143,13 @@ onMouseLeave={() => setActiveMenu(null)}
   initial={{ opacity: 0, y: 10 }} 
   animate={{ opacity: 1, y: 0 }} 
   exit={{ opacity: 0, y: 5 }}
-  className="absolute top-full left-0 w-48 bg-white dark:bg-slate-800 shadow-xl rounded-xl border border-gray-100 dark:border-slate-700 py-2 z-50"
+  className="absolute top-full left-0 w-48 bg-slate-100 dark:bg-slate-800 shadow-xl rounded-xl border border-gray-100 dark:border-slate-700 py-2 z-50 my-2 "
 >
   {item.subItems.map((sub) => (
     <Link 
       key={sub}
       href={`${item.href}?brand=${sub.toLowerCase()}`}
-      className="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 transition-colors"
+      className="block hover:text-white hover:bg-sky-500 px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:rounded-2xl dark:hover:bg-slate-700 transition-colors"
     >
       {sub}
     </Link>
@@ -177,7 +184,7 @@ transition={{ duration: 0.2 }}
 </button>
 
 {/* Wishlist Icon */}
-<div className="flex items-center ">
+<div className="flex items-center justify-around">
 
 <Link  href='/wishlist' 
 className="relative p-2 hover:bg-gray-100 dark:hover:bg-slate-100 rounded-full transition  "   >

@@ -1,23 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useThemeStore } from "@/store/themeStore";
 
 export default function ClientWrapper({ children }) {
   const [mounted, setMounted] = useState(false);
   const theme = useThemeStore((state) => state.theme);
 
-  useEffect(() => {
-    setMounted(true);
+  useLayoutEffect(() => {
+    const root = document.documentElement;
 
     if (theme === "dark") {
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      root.classList.remove("dark");
     }
   }, [theme]);
 
-  if (!mounted) return null; 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return <>{children}</>;
+  if (!mounted) return children;
+
+  return children;
 }
