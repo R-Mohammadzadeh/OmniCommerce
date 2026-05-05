@@ -25,7 +25,7 @@ const navItems = [
 { name: "Tablet", href: "/category/tablet", subItems: ["Acer", "Apple" ,"Samsung"] },
 { name: "Mobile", href: "/category/mobile", subItems: ["iPhone", "Samsung", "Xiaomi", "Pixel"] },
 { name: "PlayStation", href: "/category/Playstation", subItems: ["Sony"] },
-{ name: "About", href: "/about", subItems: [] },
+{ name: "About Us", href: "/about", subItems: [] },
 ];
 
 export default function Navbar({ user }) {
