@@ -53,8 +53,8 @@ export default async function HomePage() {
     <main className="min-h-screen pb-20 p-4 md:p-8">
       
       {/* Hero-Bereich: Blickfang der Startseite */}
-      <section className="bg-slate-900 text-white py-20 px-6 mt-24 lg:mt-32 text-center mb-16 rounded-[2.5rem] shadow-2xl border border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tighter">
+      <section className="bg-slate-900  text-white py-20 px-6 mt-24 lg:mt-32 text-center mb-16 rounded-[2.5rem] shadow-2xl border border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <h1 className="text-4xl md:text-7xl font-black mb-6 tracking leading-tight">
           {dict.hero.title}
         </h1>
         <p className="text-slate-400 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
