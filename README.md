@@ -1,271 +1,182 @@
-# 🛒 Reza Store – Premium Gadgets Shop
+# 🛒 OmniCommerce – Moderne E-Commerce Plattform
 
-Ein moderner E-Commerce-Shop für Premium-Gadgets, gebaut mit **Next.js 15**, **MongoDB** und **Stripe**.
+[![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-green?style=for-the-badge)](https://omni-commerce-swart.vercel.app)
+[![GitHub Repo](https://img.shields.io/badge/💻_Source-Code-black?style=for-the-badge)](https://github.com/R-Mohammadzadeh/OmniCommerce)
 
----
-
-## 🚀 Tech-Stack
-
-| Technologie | Version | Beschreibung |
-|---|---|---|
-| [Next.js](https://nextjs.org/) | 15.5 | App Router, Server Actions, Turbopack |
-| [React](https://react.dev/) | 19.1 | UI-Framework |
-| [MongoDB](https://www.mongodb.com/) + Mongoose | 9.5 | Datenbank |
-| [NextAuth v5](https://authjs.dev/) | 5.0-beta | Authentifizierung (OTP-basiert) |
-| [Stripe](https://stripe.com/) | 22.0 | Zahlungsabwicklung |
-| [Cloudinary](https://cloudinary.com/) | 2.9 | Bild-Upload & Hosting |
-| [Zustand](https://zustand-demo.pmnd.rs/) | 5.0 | State Management (Cart, Wishlist, Theme) |
-| [Tailwind CSS](https://tailwindcss.com/) | 4.2 | Styling |
-| [Framer Motion](https://www.framer.com/motion/) | 12 | Animationen |
-| [Recharts](https://recharts.org/) | 3.8 | Admin-Dashboard Charts |
-| [Nodemailer](https://nodemailer.com/) | 8.0 | OTP-E-Mails versenden |
-| [Swiper](https://swiperjs.com/) | 12 | Produkt-Slider |
+> Eine moderne Full-Stack E-Commerce Anwendung mit Fokus auf Performance, Skalierbarkeit und exzellente User Experience.
 
 ---
 
-## 📋 Voraussetzungen
+##  Warum dieses Projekt?
 
-- **Node.js** >= 18.x
-- **npm** >= 9.x
-- MongoDB-Datenbank (lokal oder [MongoDB Atlas](https://www.mongodb.com/atlas))
-- Stripe-Konto
-- Cloudinary-Konto
-- E-Mail-Konto für Nodemailer (z. B. Gmail)
+Viele E-Commerce-Projekte sind entweder:
+
+* ❌ Überkompliziert und langsam
+* ❌ Oder zu simpel und nicht realitätsnah
+
+👉 **OmniCommerce kombiniert beides richtig**
+Realistische Architektur + moderne Technologien + sauberes UX.
 
 ---
 
-## ⚙️ Installation
+##  Features
 
-### 1. Repository klonen
+* 🔐 Passwortlose Authentifizierung (OTP per E-Mail)
+* 🛍️ Warenkorb & Wunschliste (Zustand – in Echtzeit)
+* 💳 Sichere Bezahlung mit Stripe
+* 🧑‍💼 Admin-Dashboard (Produkte / Nutzer / Statistiken)
+* ⭐ Bewertungen & Review-System
+* 🌙 Dark Mode
+* 🔎 Live-Produktsuche
+* 📱 Vollständig responsiv (Mobile-first)
+* ⚡ Sehr schnelle Performance (Next.js + Server Actions)
 
-```bash
-git clone <repo-url>
-cd my-app
-```
+---
 
-### 2. Abhängigkeiten installieren
+## 🧠 Tech Stack
 
-```bash
+**Frontend**
+
+* Next.js (App Router)
+* React
+* Tailwind CSS
+* Framer Motion
+
+**Backend**
+
+* Server Actions (kein klassisches REST API)
+
+**Datenbank**
+
+* MongoDB + Mongoose
+
+**Authentifizierung**
+
+* NextAuth (OTP-basiert)
+
+**Payments**
+
+* Stripe Checkout + Webhooks
+
+**Storage**
+
+* Cloudinary
+
+**State Management**
+
+* Zustand
+
+---
+
+## 🌐 Live Demo
+
+👉 https://omni-commerce-swart.vercel.app
+
+---
+## ⚙️ Lokale Installation
+
+```bash id="y6jz7m"
+git clone https://github.com/R-Mohammadzadeh/OmniCommerce.git
+cd OmniCommerce
 npm install
-```
-
-### 3. Umgebungsvariablen einrichten
-
-Erstelle eine `.env.local` Datei im Root-Verzeichnis:
-
-```env
-# Datenbank
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>
-
-# NextAuth
-AUTH_SECRET=<dein-geheimer-schluessel>         # openssl rand -base64 32
-NEXTAUTH_URL=http://localhost:3000
-
-# Stripe
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-
-# Nodemailer (E-Mail für OTP-Versand)
-EMAIL_USER=deine@email.de
-EMAIL_PASS=dein-app-passwort
-
-# Demo-Admin OTP (optional, Standard: 11111)
-DEMO_OTP=11111
-```
-
-### 4. Entwicklungsserver starten
-
-```bash
 npm run dev
 ```
 
-Die App ist unter [http://localhost:3000](http://localhost:3000) erreichbar.
-
 ---
 
-## 📁 Projektstruktur
+## 🔑 Environment Variablen
 
-```
-my-app/
-├── app/                        # Next.js App Router
-│   ├── page.js                 # Startseite
-│   ├── layout.js               # Root Layout (Navbar, Footer)
-│   ├── actions/                # Server Actions
-│   │   ├── getHomeProductsAction.jsx
-│   │   ├── stripeActions.jsx
-│   │   ├── usersActions.jsx
-│   │   └── ...
-│   ├── admin/                  # Admin-Bereich (geschützt)
-│   ├── cart/                   # Warenkorb
-│   ├── product/                # Produkt-Detailseite
-│   ├── profile/                # Benutzerprofil
-│   ├── login/                  # Login (OTP)
-│   ├── register/               # Registrierung
-│   ├── wishlist/               # Wunschliste
-│   └── ...
-├── Components/                 # Wiederverwendbare Komponenten
-│   ├── Navbar.jsx
-│   ├── Footer.jsx
-│   ├── ProductCard.jsx
-│   ├── HomeSlider.jsx
-│   ├── ProductReviews.jsx
-│   └── ...
-├── models/                     # Mongoose-Schemas
-│   ├── UsersData.js            # Benutzer-Schema
-│   └── ProductsData.js         # Produkt-Schema
-├── lib/                        # Auth-Konfiguration
-│   ├── auth.js                 # NextAuth Setup
-│   ├── auth.config.js          # Auth-Callbacks & Pages
-│   └── authActions.js
-├── store/                      # Zustand Stores
-│   ├── useCartStore.js         # Warenkorb
-│   ├── useWishlistStore.js     # Wunschliste
-│   └── themeStore.js           # Dark/Light Mode
-├── config/
-│   └── connectDB.js            # MongoDB-Verbindung
-├── dictionaries/
-│   └── de.js                   # Deutsche Übersetzungen
-├── utils/
-│   └── Helper.jsx
-└── middleware.js               # Routen-Schutz (Auth)
+```env id="l88v3k"
+MONGODB_URI=
+
+AUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+EMAIL_USER=
+EMAIL_PASS=
+
+DEMO_OTP=111111
 ```
 
----
-
-## 🔐 Authentifizierung
-
-Das Login-System basiert auf **OTP (Einmal-Passwort)** per E-Mail – kein klassisches Passwort-Login.
-
-**Login-Ablauf:**
-1. Benutzer gibt E-Mail-Adresse ein
-2. Ein 6-stelliger OTP-Code wird per E-Mail versendet
-3. Benutzer gibt den Code ein und wird eingeloggt
-
-**Rollen:**
-- `user` – Standardbenutzer (Warenkorb, Profil, Bestellungen)
-- `admin` – Zugriff auf Admin-Panel
-
-**Demo-Admin-Konto:**
-```
-E-Mail: demo-admin@test.com
-OTP:    11111  (oder DEMO_OTP aus .env)
-```
+> ⚠️ `.env` Dateien niemals ins Repository committen!
 
 ---
 
-## 🛡️ Routen-Schutz (Middleware)
+## 🔐 Authentifizierungs-Flow
 
-| Route | Zugriff |
-|---|---|
-| `/` | Öffentlich |
-| `/product/*` | Öffentlich |
-| `/login` | Nur nicht eingeloggte Nutzer |
-| `/cart`, `/profile`, `/dashboard` | Eingeloggte Nutzer |
-| `/admin/*` | Nur Admins |
+1. E-Mail eingeben
+2. OTP-Code erhalten
+3. Code bestätigen → eingeloggt
+
+👉 Kein Passwort, keine Reibung.
 
 ---
 
-## 🏪 Features
+## 🛡️ Zugriffskontrolle
 
-- **Startseite** – Produkt-Slider nach Kategorien (Kameras, Laptops, Smartphones, Tablets, Gaming)
-- **Produktsuche** – Live-Suche über alle Produkte
-- **Produktdetailseite** – Bilder, Beschreibung, Bewertungen, In den Warenkorb
-- **Warenkorb** – Menge ändern, löschen, Checkout mit Stripe
-- **Wunschliste** – Produkte speichern (Zustand)
-- **Bewertungen** – Sterne-Bewertung & Kommentare (nur eingeloggte Nutzer)
-- **Profil** – Daten bearbeiten, Profilbild hochladen (Cloudinary)
-- **Passwort vergessen** – Reset per OTP-Code
-- **Dark Mode** – System-weite Umschaltung
-- **Cookie-Consent** – DSGVO-konformes Banner
-- **Admin-Panel:**
-  - Dashboard mit Charts (Recharts)
-  - Produkte hinzufügen / bearbeiten / löschen
-  - Benutzerverwaltung
-  - Kategorieübersicht
+| Route        | Zugriff                |
+| ------------ | ---------------------- |
+| `/`          | Öffentlich             |
+| `/product/*` | Öffentlich             |
+| `/cart`      | Nur eingeloggte Nutzer |
+| `/profile`   | Nur eingeloggte Nutzer |
+| `/admin/*`   | Nur Admin              |
 
 ---
 
-## 🛍️ Produkt-Kategorien
+## 🧩 Architektur
 
-| Kategorie | Slug |
-|---|---|
-| Kameras | `camera` |
-| Laptops | `laptop` |
-| Smartphones | `mobile` |
-| Tablets | `tablet` |
-| Gaming / PlayStation | `playstation` |
+Client → Next.js (React + Zustand)
+Server → Server Actions
+Datenbank → MongoDB
+Payments → Stripe
+Media → Cloudinary
 
 ---
 
-## 💳 Stripe-Integration
+## 🚧 Herausforderungen
 
-Zahlungen werden über Stripe Checkout abgewickelt. Nach erfolgreichem Checkout wird der Nutzer auf `/success` weitergeleitet.
-
-**Testdaten für Stripe:**
-```
-Kartennummer: 4242 4242 4242 4242
-Datum:        beliebig (z. B. 12/34)
-CVC:          beliebig (z. B. 123)
-```
+* OTP-Verifikation & Ablaufzeit korrekt implementieren
+* Sichere Routen mit Middleware schützen
+* Globalen State sauber synchronisieren
+* Stripe Checkout korrekt integrieren
 
 ---
 
-## 🖼️ Bild-Upload (Cloudinary)
+## 📈 Production-Ready Aspekte
 
-Produkt- und Profilbilder werden direkt zu Cloudinary hochgeladen. Die zurückgegebene URL wird in der Datenbank gespeichert.
-
----
-
-## 🧪 Verfügbare Scripts
-
-```bash
-npm run dev      # Entwicklungsserver starten (Turbopack)
-npm run build    # Produktions-Build erstellen
-npm run start    # Produktions-Server starten
-npm run lint     # ESLint ausführen
-```
+* Skalierbare Projektstruktur
+* Role-based Access Control
+* Sichere Authentifizierung
+* Optimierte Performance (SSR + Caching)
 
 ---
 
-## 🗄️ Datenbank-Schemas
+## 🚀 Zukünftige Erweiterungen
 
-### User
-| Feld | Typ | Pflicht |
-|---|---|---|
-| `name` | String | ✅ |
-| `email` | String (unique) | ✅ |
-| `password` | String (gehasht) | ✅ |
-| `phone` | String | ✅ |
-| `role` | `user` \| `admin` | – |
-| `image` | String (URL) | – |
-| `otpCode` | String | – |
-| `otpExpires` | Date | – |
-| `lastLogin` | Date | – |
-
-### Produkt
-| Feld | Typ | Pflicht |
-|---|---|---|
-| `name` | String | ✅ |
-| `description` | String | ✅ |
-| `price` | Number | ✅ |
-| `category` | Enum | ✅ |
-| `brand` | String | ✅ |
-| `stock` | Number | – |
-| `image` | String[] | – |
-| `rating` | Number (0–5) | – |
-| `reviews` | Review[] | – |
+* Bestellhistorie
+* Erweiterte Filter & Sortierung
+* Pagination / Infinite Scroll
+* Mehrsprachigkeit (i18n)
+* Tests (Unit / Integration)
 
 ---
 
-## 📄 Lizenz
+## 👨‍💻 Autor
 
-Dieses Projekt ist privat und nicht für die öffentliche Nutzung freigegeben.
+**Reza Mohammadzadeh**
+
+* GitHub: https://github.com/R-Mohammadzadeh
 
 ---
 
-> Gebaut mit ❤️ – **Reza Mohammadzadeh** © 2026
+##  Support
+
+Wenn dir das Projekt gefällt, lass gerne ein ⭐ da!
