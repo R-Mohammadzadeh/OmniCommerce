@@ -2,15 +2,25 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 
 const ReviewSchema = new mongoose.Schema({
-  user: { type: String, required: true }, // Name oder ID des Benutzers
+  
+  user: { 
+    type: String, 
+    required: [true, "Ein Benutzername ist erforderlich"] 
+  }, 
   rating: { 
     type: Number, 
-    required: true,
-    min: 1, // Mindestens 1 Stern
-    max: 5  // Maximal 5 Sterne
+    required: [true, "Eine Bewertung ist erforderlich"],
+    min: 1, 
+    max: 5  
   },
-  comment: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  comment: { 
+    type: String, 
+    required: [true, "Ein Kommentar ist erforderlich"] 
+  },
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  }
 });
 
 /**
