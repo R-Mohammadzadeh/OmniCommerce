@@ -53,7 +53,7 @@ export const de = {
     },
 
     admin:{
-        addProduc:{
+        addProduct:{
             title :"Neues Produkt hinzufügen",
             subtitle: "Füllen Sie die Details aus, um ein neues Produkt zu listen",
             form:{

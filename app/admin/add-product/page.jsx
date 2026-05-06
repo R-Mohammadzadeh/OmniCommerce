@@ -137,7 +137,7 @@ export default function AddProductPage() {
             <textarea
               name="description"
               rows="4"
-              placeholder={dict.form.descriptionPlaceholder}
+              placeholder={dict.form.description}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-900"
               required
             ></textarea>
@@ -150,13 +150,13 @@ export default function AddProductPage() {
               disabled={isPending}
               className="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors disabled:opacity-50"
             >
-              {isPending ? dict.form.buttonLoading : dict.form.buttonSubmit}
+              {isPending ? dict.form.processing : dict.form.submit}
             </button>
             <Link
               href="/admin"
               className="px-8 py-3 border border-gray-300 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-center flex items-center dark:text-white dark:hover:bg-slate-700"
             >
-              {dict.form.cancel}
+              {dict.form.back}
             </Link>
           </div>
         </form>

@@ -71,7 +71,7 @@ export default function HomeSlider({ products, title }) {
                   </span>
 
                   <Link href={`/product/${product._id}`}>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 line-clamp-2 h-12 text-sm hover:text-blue-600 transition-colors">
+                    <h3 className="font-bold text-slate-700 py-1 dark:text-slate-100 line-clamp-2 h-12 text-sm hover:text-blue-600 transition-colors">
                       {product.name}
                     </h3>
                   </Link>

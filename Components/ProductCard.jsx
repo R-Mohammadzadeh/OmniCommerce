@@ -11,10 +11,7 @@ import { HiPlus } from "react-icons/hi2";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi2";
 import StarRating from "./StartRating";
 
-/**
- * ProductCard Komponente
- * Zeigt eine interaktive Produktkarte mit Bild, Preis, Bewertung und Warenkorb-Logik.
- */
+
 export default function ProductCard({ product }) {
   const addToCart = useCartStore((state) => state.addToCart);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
@@ -27,7 +24,6 @@ export default function ProductCard({ product }) {
 
   const fallbackImage = "/image/placeholder.png";
 
-  // Initialer Bildpfad basierend auf Kategorie oder absoluter URL
   const getInitialImage = () => {
     if (product?.image?.[0]?.startsWith('http')) return product.image[0];
     return `/image/${product?.category?.toLowerCase()}s/${product?.image?.[0] || 'placeholder.png'}`;
@@ -36,13 +32,17 @@ export default function ProductCard({ product }) {
   const [imgSrc, setImgSrc] = useState(getInitialImage());
   const [loading, setLoading] = useState(true);
 
-  // Aktualisiert das Bild, wenn sich das Produkt-Prop ändert
+  // Bug fix: loading nur setzen wenn Bild sich wirklich ändert
   useEffect(() => {
-    if(!product) return;
-    setLoading(true);
-    const src = product?.image?.[0]?.startsWith('http') ? product.image[0] :
-    `/image/${product?.category?.toLowerCase()}s/${product?.image?.[0] || 'placeholder.png' }`;
-    setImgSrc(src);
+    if (!product) return;
+    const src = product?.image?.[0]?.startsWith('http')
+      ? product.image[0]
+      : `/image/${product?.category?.toLowerCase()}s/${product?.image?.[0] || 'placeholder.png'}`;
+
+    if (src !== imgSrc) {
+      setLoading(true);
+      setImgSrc(src);
+    }
   }, [product]);
 
   const handleAddToCartClick = (e) => {
@@ -77,12 +77,13 @@ export default function ProductCard({ product }) {
   };
 
   return (
+    
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full group"
+      className="bg-white  dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full group"
     >
       {/* BILD-BEREICH */}
       <div className="relative h-60 w-full bg-gray-50 dark:bg-white overflow-hidden flex items-center justify-center">
@@ -90,7 +91,8 @@ export default function ProductCard({ product }) {
           <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-slate-600 z-10" />
         )}
 
-        <Link href={`/product/${product._id}`} className="relative w-full h-full block p-4">
+        {/* Hinweis fix: Fallback für fehlende _id */}
+        <Link href={product?._id ? `/product/${product._id}` : '#'} className="relative w-full h-full block p-4">
           <Image
             src={imgSrc || fallbackImage}
             onError={() => setImgSrc(fallbackImage)}
@@ -122,7 +124,7 @@ export default function ProductCard({ product }) {
 
       {/* INFO-BEREICH */}
       <div className="p-5 flex flex-col grow">
-        <Link href={`/product/${product._id}`}>
+        <Link href={product?._id ? `/product/${product._id}` : '#'}>
           <h3 className="text-base font-bold text-gray-800 dark:text-white mb-1 line-clamp-1 hover:text-blue-600 transition-colors">
             {product?.name}
           </h3>
@@ -151,9 +153,19 @@ export default function ProductCard({ product }) {
           <div className="flex items-center z-20">
             {isInCart ? (
               <div className="flex items-center gap-2 bg-gray-100 dark:bg-slate-900 rounded-xl p-1 shadow-inner">
-                <button onClick={handleDecrease} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm hover:text-red-500 transition-colors">-</button>
+                <button
+                  onClick={handleDecrease}
+                  className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm hover:text-red-500 transition-colors"
+                >
+                  -
+                </button>
                 <span className="font-bold px-1 dark:text-white text-sm">{quantity}</span>
-                <button onClick={handleIncrease} className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm hover:text-green-500 transition-colors">+</button>
+                <button
+                  onClick={handleIncrease}
+                  className="w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm hover:text-green-500 transition-colors"
+                >
+                  +
+                </button>
               </div>
             ) : (
               <button
@@ -167,5 +179,6 @@ export default function ProductCard({ product }) {
         </div>
       </div>
     </motion.div>
+   
   );
 }

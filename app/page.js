@@ -50,7 +50,7 @@ export default async function HomePage() {
   const playstations = products.filter(p => p.category?.toLowerCase() === 'playstation');
 
   return (
-    <main className="min-h-screen pb-20 p-4 md:p-8">
+    <main className="min-h-screen pb-20 p-4 md:p-2">
       
       {/* Hero-Bereich: Blickfang der Startseite */}
       <section className="bg-slate-900  text-white py-20 px-6 mt-24 lg:mt-32 text-center mb-16 rounded-[2.5rem] shadow-2xl border border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-700">
