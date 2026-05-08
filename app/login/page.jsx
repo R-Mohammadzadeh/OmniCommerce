@@ -8,7 +8,8 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { GrUserAdmin } from "react-icons/gr";
 import { Eye, EyeOff } from "lucide-react";
-
+import { MdOutlinePassword } from "react-icons/md";
+import { FaBarcode } from "react-icons/fa6";
 /**
  * LoginPage Komponente
  * Implementiert einen Zwei-Faktor-Authentifizierungs-Ablauf.
@@ -75,7 +76,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-[#0f172a] p-4 mt-18">
+    <section className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a] p-4 mt-6">
       <div className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-full max-w-md border dark:border-white/10">
 
         <h2 className="text-3xl font-black mb-2 text-center dark:text-white">
@@ -167,6 +168,49 @@ export default function LoginPage() {
                 Jetzt registrieren
               </Link>
             </p>
+            
+          {/* Demo Admin Info Section */}
+<div className="pt-5 mt-4 border-t border-gray-200 dark:border-gray-700">
+  <div className="flex flex-col gap-3 text-sm font-mono">
+
+    {/* Email */}
+    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+        <GrUserAdmin className="text-indigo-500 text-lg" />
+        <span>Email</span>
+      </div>
+
+      <span className="text-gray-900 dark:text-gray-100 font-semibold">
+        demo-admin@test.com
+      </span>
+    </div>
+
+    {/* Password */}
+    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+        <MdOutlinePassword className="text-indigo-500 text-lg" />
+        <span>Password</span>
+      </div>
+
+      <span className="bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-lg font-bold tracking-wider">
+        12345678@
+      </span>
+    </div>
+
+    {/* OTP */}
+    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+        <FaBarcode className="text-indigo-500 text-lg" />
+        <span>OTP</span>
+      </div>
+
+      <span className="bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 px-3 py-1 rounded-lg font-bold tracking-[3px]">
+        11111
+      </span>
+    </div>
+
+  </div>
+</div>
           </div>
         )}
       </div>
