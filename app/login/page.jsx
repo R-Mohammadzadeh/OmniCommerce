@@ -159,7 +159,7 @@ export default function LoginPage() {
 
         {step === 1 && (
           <div className="mt-6 text-center space-y-2">
-            <Link href="/forgot-password" size="sm" className="text-indigo-500 hover:underline text-sm block">
+            <Link href="/forget-password" size="sm" className="text-indigo-500 hover:underline text-sm block">
               Passwort vergessen?
             </Link>
             <p className="text-gray-500 dark:text-gray-400 text-sm">

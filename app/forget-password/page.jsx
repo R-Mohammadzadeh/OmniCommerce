@@ -22,31 +22,30 @@ export default function ForgotPassword() {
    * If successful, moves the user to step 2.
    */
   useEffect(() => {
-    if (sendState) {
+    if (!sendState) return
       if (sendState.error) {
         toast.error(sendState.message)
-      } else {
+      } else if(sendState.success) {
         toast.success(sendState.message)
         setStep(2)
       }
-    }
+    
   }, [sendState])
 
   /**
-   * Effect to handle the result of the password reset process.
-   * If successful, redirects the user to the login page after a short delay.
+   * Effekt zur Verarbeitung des Ergebnisses des Passwort-Zurücksetzungsprozesses.
+   * Bei Erfolg leitet er den Benutzer nach einer kurzen Verzögerung auf die Anmeldeseite weiter.
    */
-  useEffect(() => {
-    if (resetState) {
-      if (resetState.error) {
-        toast.error(resetState.message)
+ useEffect(() => {
+    if (resetState?.message) {
+      if (resetState.success) {
+        toast.success(resetState.message);
+        setTimeout(() => router.push('/login'), 2000);
       } else {
-        toast.success(resetState.message)
-        // Delay to allow the user to read the success message
-        setTimeout(() => router.push('/login'), 2000)
+        toast.error(resetState.message);
       }
     }
-  }, [resetState, router])
+  }, [resetState, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6">
