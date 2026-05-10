@@ -6,7 +6,74 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation, Mousewheel } from "swiper/modules";
 import Link from "next/link";
+import { cn } from "@/lib/utlis";
 
+
+/*-----styles-----*/
+
+const styles = {
+  section : 'mb-16 w-full' ,
+
+  title : cn(
+    'mb-8 border-l-4 border-blu-600 pl-4',
+    'text-3xl font-extrabold tracking-tight',
+    'text-slate-800 dark:text-white',
+  ),
+
+  swiper:'py-14',
+
+  card: cn(
+    'flex flex-col min-h-50 group',
+    'p-4 shadow-sm  transition-all duration-500',
+    'border border-slate-100 dark:border-slate-800',
+    'bg-slate-300 dark:bg-slate-900 rounded-3xl ',
+  ),
+
+  imageCard:cn(
+    'h-52 w-full relative mb-4',
+    'overflow-hidden rounded-2xl bg-white',
+    ' dark:bg-slate-800 flex items-center justify-center',
+  ),
+
+  image:cn(
+    'group-hover:scale-110 transition-transform duration-500',
+    'object-contain w-4/5 h-4/5 p-2 ',
+    
+  ),
+
+  cardBody: 'flex flex-col grow space-y-3',
+   
+  cardBadge :cn(
+    'text-[10px] uppercase tracking-widest font-black',
+    ' bg-blue-50 dark:bg-blue-900/30 px-2.5 ',
+    'text-blue-600 py-1 rounded-lg w-fit ',
+  ),
+
+  productName:cn(
+    'h-12 text-sm hover:text-blue-600 transition-colors',
+    'py-1 dark:text-slate-100 line-clamp-2 ',
+    'font-bold text-slate-700 ',
+  ),
+
+  footer:cn(
+    'flex justify-between items-center pt-4',
+    ' mt-auto border-t border-slate-50 dark:border-slate-800',
+  ),
+
+  price:cn(
+    'text-xl font-black text-slate-900 dark:text-white',
+  ),
+
+  Details:cn(
+    'bg-slate-950 dark:bg-blue-600 text-white text-[11px] ',
+    ' hover:bg-blue-700 transition-all active:scale-95',
+    'font-bold px-5 py-2.5 rounded-xl',
+  ),
+  
+};
+
+
+/* ----------------------------- component ----------------------------- */
 /**
  * HomeSlider Komponente
  * Zeigt eine Liste von Produkten in einem interaktiven Swiper-Slider an.
@@ -15,9 +82,9 @@ import Link from "next/link";
  */
 export default function HomeSlider({ products, title }) {
   return (
-    <div className="w-full mb-16">
+    <section className={styles.section}>
       {/* Sektions-Überschrift mit blauem Akzent */}
-      <h2 className="text-3xl font-extrabold mb-8 text-slate-800 dark:text-white border-l-4 border-blue-600 pl-4 tracking-tight">
+      <h2 className={styles.title}>
         {title}
       </h2>
 
@@ -37,7 +104,7 @@ export default function HomeSlider({ products, title }) {
           1024: { slidesPerView: 3 },
           1280: { slidesPerView: 4 },
         }}
-        className="py-14"
+        className={styles.swiper}
       >
         {products?.map((product) => {
           // Bildpfad-Logik: Prüft auf absolute URLs oder generiert lokalen Pfad
@@ -49,42 +116,43 @@ export default function HomeSlider({ products, title }) {
           return (
             <SwiperSlide key={product._id}>
               {/* Produktkarte */}
-              <div className="bg-slate-300 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-4 shadow-sm  transition-all duration-500 flex flex-col min-h-50 group">
+              <div className={styles.card}>
 
                 {/* Bild-Container */}
                 <Link href={`/product/${product._id}`}>
-                  <div className="h-52 w-full relative mb-4 overflow-hidden rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center">
+                  <div className={styles.imageCard}>
                     <img
                       src={imageSrc}
                       alt={product.name}
-                      className="object-contain w-4/5 h-4/5 p-2 group-hover:scale-110 transition-transform duration-500"
+                      className={styles.image}
                     />
                   </div>
                 </Link>
 
                 {/* Produkt-Details */}
-                <div className="flex flex-col grow space-y-3">
+                <div className={styles.cardBody}>
                   
                   {/* Kategorie-Badge */}
-                  <span className="text-[10px] uppercase tracking-widest font-black text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-lg w-fit">
+                  <span className={styles.cardBadge}>
                     {product.category}
                   </span>
 
                   <Link href={`/product/${product._id}`}>
-                    <h3 className="font-bold text-slate-700 py-1 dark:text-slate-100 line-clamp-2 h-12 text-sm hover:text-blue-600 transition-colors">
+                    <h3 className={styles.productName}>
                       {product.name}
                     </h3>
                   </Link>
 
                   {/* Preis und Action-Button */}
-                  <div className="flex justify-between items-center pt-4 mt-auto border-t border-slate-50 dark:border-slate-800">
-                    <span className="text-xl font-black text-slate-900 dark:text-white">
+                  <div className={styles.footer}>
+
+                    <span className={styles.price}>
                       {product.price?.toLocaleString("de-DE")} €
                     </span>
 
                     <Link
                       href={`/product/${product._id}`}
-                      className="bg-slate-950 dark:bg-blue-600 text-white text-[11px] font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all active:scale-95"
+                      className={styles.Details}
                     >
                       Details
                     </Link>
@@ -96,6 +164,6 @@ export default function HomeSlider({ products, title }) {
           );
         })}
       </Swiper>
-    </div>
+    </section>
   );
 }
