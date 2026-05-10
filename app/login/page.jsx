@@ -76,7 +76,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a] p-4 mt-6">
+    <section className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a] p-4 mt-20">
       <div className="bg-white dark:bg-slate-900/50 dark:backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-full max-w-md border dark:border-white/10">
 
         <h2 className="text-3xl font-black mb-2 text-center dark:text-white">

@@ -1,138 +1,227 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, useActionState } from "react";
+
+import { motion, AnimatePresence } from "framer-motion";
+
 import { toast, Toaster } from "sonner";
-import { de } from '@/dictionaries/de'
-import { resetPasswordAction, sendOtpAction } from "../actions/resetPasswordAction";
+
 import { useRouter } from "next/navigation";
 
+import { de } from "@/dictionaries/de";
+
+import {
+  sendOtpAction,
+  resetPasswordAction,
+} from "../actions/resetPasswordAction";
+
+import { cn } from "@/lib/utils";
+
+const dict = de.forgotPassword;
+
+/* ----------------------------- styles ----------------------------- */
+
+const styles = {
+  wrapper: cn(
+    "flex min-h-screen items-center justify-center p-6",
+    "bg-slate-50 dark:bg-slate-950"
+  ),
+
+  card: cn(
+    "w-full max-w-md rounded-[2.5rem] p-8",
+    "border border-slate-200 dark:border-slate-800",
+    "bg-white dark:bg-slate-900",
+    "shadow-2xl"
+  ),
+
+  form: "space-y-5",
+
+  input: cn(
+    "w-full rounded-2xl px-6 py-4",
+    "bg-slate-50 dark:bg-slate-800",
+    "outline-none transition-all",
+    "focus:ring-2 focus:ring-blue-500"
+  ),
+
+  title:
+    "text-3xl font-black text-slate-900 dark:text-white",
+
+  subtitle: "mt-2 text-slate-500",
+
+  button: cn(
+    "w-full rounded-2xl py-4",
+    "font-bold text-white transition-all",
+    "disabled:opacity-50"
+  ),
+};
+
+/* ----------------------------- motion ----------------------------- */
+
+const slideAnimation = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 },
+};
+
+/* ----------------------------- component ----------------------------- */
+
 export default function ForgotPassword() {
-  const dict = de.forgotPassword;
   const router = useRouter();
-  const [step, setStep] = useState(1); // 1: Email/OTP Request, 2: New Password/OTP Verification
+
+  const [step, setStep] = useState(1);
+
   const [email, setEmail] = useState("");
 
-  // Server Action states for sending OTP and resetting password
-  const [sendState, sendAction, isSendPending] = useActionState(sendOtpAction, null);
-  const [resetState, resetAction, isResetPending] = useActionState(resetPasswordAction, null);
+  const [sendState, sendAction, sendPending] =
+    useActionState(sendOtpAction, null);
 
-  /**
-   * Effect to handle the result of the OTP sending process.
-   * If successful, moves the user to step 2.
-   */
+  const [resetState, resetAction, resetPending] =
+    useActionState(resetPasswordAction, null);
+
+  /* ----------------------------- effects ----------------------------- */
+
   useEffect(() => {
-    if (!sendState) return
-      if (sendState.error) {
-        toast.error(sendState.message)
-      } else if(sendState.success) {
-        toast.success(sendState.message)
-        setStep(2)
-      }
-    
-  }, [sendState])
+    if (sendState?.success) {
+      toast.success(sendState.message);
 
-  /**
-   * Effekt zur Verarbeitung des Ergebnisses des Passwort-Zurücksetzungsprozesses.
-   * Bei Erfolg leitet er den Benutzer nach einer kurzen Verzögerung auf die Anmeldeseite weiter.
-   */
- useEffect(() => {
-    if (resetState?.message) {
-      if (resetState.success) {
-        toast.success(resetState.message);
-        setTimeout(() => router.push('/login'), 2000);
-      } else {
-        toast.error(resetState.message);
-      }
+      setStep(2);
+    }
+
+    if (sendState?.error) {
+      toast.error(sendState.message);
+    }
+  }, [sendState]);
+
+  useEffect(() => {
+    if (!resetState?.message) return;
+
+    if (resetState.success) {
+      toast.success(resetState.message);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+
+    } else {
+      toast.error(resetState.message);
     }
   }, [resetState, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6">
-      <Toaster richColors position="top-center" visibleToasts={1} />
+    <div className={styles.wrapper}>
+      <Toaster richColors position="top-center" />
 
-      <motion.div
-        layout
-        className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-[2.5rem] p-8"
-      >
+      <motion.div layout className={styles.card}>
         <AnimatePresence mode="wait">
+
+          {/* STEP 1 */}
+
           {step === 1 ? (
-            /* Step 1: Request OTP by providing email */
             <motion.form
               key="step1"
               action={sendAction}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="space-y-6"
+              className={styles.form}
+              {...slideAnimation}
             >
-              <div className="text-center">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white">
-                  {dict.title}
-                </h2>
-                <p className="text-slate-500 mt-2">{dict.subtitle}</p>
-              </div>
+              <Header
+                title={dict.title}
+                subtitle={dict.subtitle}
+              />
 
               <input
+                required
                 name="email"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="E-Mail Adresse"
-                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                className={styles.input}
               />
 
               <button
-                disabled={isSendPending}
-                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50"
+                disabled={sendPending}
+                className={cn(
+                  styles.button,
+                  "bg-blue-600 hover:bg-blue-700"
+                )}
               >
-                {isSendPending ? "Wird gesendet..." : "OTP anfordern"}
+                {sendPending
+                  ? "Wird gesendet..."
+                  : "OTP anfordern"}
               </button>
             </motion.form>
+
           ) : (
-            /* Step 2: Verify OTP and set new password */
+
+            /* STEP 2 */
+
             <motion.form
               key="step2"
               action={resetAction}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
               className="space-y-4"
+              {...slideAnimation}
             >
-              <input type="hidden" name="email" value={email} />
-              
-              <div className="text-center mb-6">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white">Neues Passwort</h2>
-                <p className="text-slate-500 mt-2">Code eingeben und Passwort ändern</p>
-              </div>
-
               <input
-                name="otp"
-                type="text"
-                required
-                placeholder="6-stelliger Code"
-                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl text-center tracking-[1em] font-bold"
+                type="hidden"
+                name="email"
+                value={email}
+              />
+
+              <Header
+                title="Neues Passwort"
+                subtitle="Code eingeben und Passwort ändern"
               />
 
               <input
-                name="newPassword"
-                type="password"
                 required
+                type="text"
+                name="otp"
+                placeholder="6-stelliger Code"
+                className={cn(
+                  styles.input,
+                  "text-center font-bold tracking-[1em]"
+                )}
+              />
+
+              <input
+                required
+                type="password"
+                name="newPassword"
                 placeholder="Neues Passwort"
-                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl"
+                className={styles.input}
               />
 
               <button
-                disabled={isResetPending}
-                className="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-2xl shadow-lg shadow-green-500/30 transition-all"
+                disabled={resetPending}
+                className={cn(
+                  styles.button,
+                  "bg-green-600 hover:bg-green-700"
+                )}
               >
-                {isResetPending ? "Wird aktualisiert..." : "Passwort speichern"}
+                {resetPending
+                  ? "Wird aktualisiert..."
+                  : "Passwort speichern"}
               </button>
             </motion.form>
           )}
         </AnimatePresence>
       </motion.div>
+    </div>
+  );
+}
+
+/* ----------------------------- ui ----------------------------- */
+
+function Header({ title, subtitle }) {
+  return (
+    <div className="mb-6 text-center">
+      <h2 className={styles.title}>{title}</h2>
+
+      <p className={styles.subtitle}>
+        {subtitle}
+      </p>
     </div>
   );
 }

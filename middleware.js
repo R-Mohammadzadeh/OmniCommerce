@@ -50,7 +50,7 @@ export default auth((req) => {
   }
 
   // Falls keine Regel zutrifft, wird die Anfrage normal weitergeführt
-  return null;
+  return NextResponse.next();
 });
 
 /**
