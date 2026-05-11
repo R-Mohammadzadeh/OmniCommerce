@@ -63,7 +63,7 @@ export default async function HomePage() {
         </p>
        
       </section>
-            <div className="my-4">
+            <div className="my-8">
           <LogoSlider  />
            </div>
       {/* Produkt-Kategorien: Slider werden nur gerendert, wenn Produkte vorhanden sind */}

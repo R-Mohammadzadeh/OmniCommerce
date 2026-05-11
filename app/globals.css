@@ -36,12 +36,6 @@ html, body {
   overflow-x: hidden;
 }
 
-@layer utilities {
-  .animate-scroll {
-    display: flex;
-    width: max-content;
-    animation: scroll-horizontal 30s linear infinite;
-  }
   @keyframes scroll-horizontal {
     from{
       transform: translateX(0);
@@ -50,6 +44,14 @@ html, body {
       transform: translateX(-33.33%);
     }
   }
+
+@layer utilities {
+  .animate-scroll {
+    display: flex;
+    width: max-content;
+    animation: scroll-horizontal 30s linear infinite;
+  }
+
   .animmate-scroll:hover{
     animation-play-state: paused;
     cursor: pointer;
