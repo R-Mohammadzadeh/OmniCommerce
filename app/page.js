@@ -74,7 +74,9 @@ export default async function HomePage() {
         {tablets.length > 0 && <HomeSlider products={tablets} title={dict.category.tablets} />}
         {playstations.length > 0 && <HomeSlider products={playstations} title={dict.category.gaming} />}
       </div>
-      
+      <div className="mb-6">
+        <LogoSlider />
+      </div>
     </main>
   );
 }
