@@ -6,7 +6,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation, Mousewheel } from "swiper/modules";
 import Link from "next/link";
-import { cn } from "@/lib/utlis";
+import { cn } from "@/lib/utlis_temps";
 
 
 /*-----styles-----*/

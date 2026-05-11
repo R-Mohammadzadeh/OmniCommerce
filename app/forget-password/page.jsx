@@ -10,12 +10,13 @@ import { useRouter } from "next/navigation";
 
 import { de } from "@/dictionaries/de";
 
-import {
-  sendOtpAction,
-  resetPasswordAction,
-} from "../actions/resetPasswordAction";
+import {sendOtpAction,resetPasswordAction} from "../actions/resetPasswordAction";
+  
+import { cn } from "@/lib/utlis_temps";  
 
-import { cn } from "@/lib/utils";
+
+
+
 
 const dict = de.forgotPassword;
 
