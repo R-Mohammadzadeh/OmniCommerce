@@ -19,8 +19,8 @@ const duplicatedLogos = [...logos,...logos,...logos];
 
 
 return (
-    <div className="overflow-hidden bg-slate-50 dark:bg-blue-900 py-4">
-        <div className="flex gap-14 item-center animate-scroll">
+    <div className="overflow-hidden bg-slate-50 dark:bg-blue-900 py-4 rounded-full">
+        <div className="flex gap-11 item-center animate-scroll">
             {duplicatedLogos.map((logo,index) => (
                 <div className="group shrink-0 h-9 w-24 flex item-center justify-center" key={index}>
                     <Image src={logo.src} alt={logo.name} width={96} height={36}
