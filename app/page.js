@@ -2,6 +2,7 @@ import HomeSlider from '@/Components/HomeSlider'
 import { getHomeProducts } from "./actions/getHomeProductsAction";
 import Link from "next/link";
 import { de } from '@/dictionaries/de'
+import LogoSlider from '@/Components/LogoSlider';
 
 /**
  * Startseite der Anwendung (Home Page)
@@ -60,8 +61,11 @@ export default async function HomePage() {
         <p className="text-slate-400 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
           {dict.hero.subtitle}
         </p>
+       
       </section>
-
+            <div className="my-4">
+          <LogoSlider  />
+           </div>
       {/* Produkt-Kategorien: Slider werden nur gerendert, wenn Produkte vorhanden sind */}
       <div className="max-w-7xl mx-auto space-y-24">
         {cameras.length > 0 && <HomeSlider products={cameras} title={dict.category.cameras}/>}

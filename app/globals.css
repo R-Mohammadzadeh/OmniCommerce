@@ -36,3 +36,22 @@ html, body {
   overflow-x: hidden;
 }
 
+@layer utilities {
+  .animate-scroll {
+    display: flex;
+    width: max-content;
+    animation: scroll-horizontal 30s linear infinite;
+  }
+  @keyframes scroll-horizontal {
+    from{
+      transform: translateX(0);
+    }
+    to{
+      transform: translateX(-33.33%);
+    }
+  }
+  .animmate-scroll:hover{
+    animation-play-state: paused;
+    cursor: pointer;
+  }
+}
