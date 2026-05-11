@@ -83,7 +83,7 @@ export default function ProductCard({ product }) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      className="bg-white  dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full group"
+      className=" bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-slate-700 flex flex-col h-full group"
     >
       {/* BILD-BEREICH */}
       <div className="relative h-60 w-full bg-gray-50 dark:bg-white overflow-hidden flex items-center justify-center">

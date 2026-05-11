@@ -26,7 +26,7 @@ const styles = {
     'flex flex-col min-h-50 group',
     'p-4 shadow-sm  transition-all duration-500',
     'border border-slate-100 dark:border-slate-800',
-    'bg-slate-300 dark:bg-slate-900 rounded-3xl ',
+    'bg-slate-100 dark:bg-slate-900 rounded-3xl ',
   ),
 
   imageCard:cn(
