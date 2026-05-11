@@ -104,24 +104,24 @@ export async function resetPasswordAction(_, formData) {
   }
 }
 
-/* ---------------------------- HELPERS ---------------------------- */
+// /* ---------------------------- HELPERS ---------------------------- */
 
-function generateOtp() {
-  return Math.floor(
-    100000 + Math.random() * 900000
-  ).toString();
-}
+// function generateOtp() {
+//   return Math.floor(
+//     100000 + Math.random() * 900000
+//   ).toString();
+// }
 
-function success(message) {
-  return {
-    success: true,
-    message,
-  };
-}
+// function success(message) {
+//   return {
+//     success: true,
+//     message,
+//   };
+// }
 
-function error(message) {
-  return {
-    success: false,
-    message,
-  };
-}
+// function error(message) {
+//   return {
+//     success: false,
+//     message,
+//   };
+// }
