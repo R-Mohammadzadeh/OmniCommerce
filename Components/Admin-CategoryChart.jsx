@@ -1,14 +1,26 @@
 "use client"
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { HiOutlineArrowLeft } from "react-icons/hi2";
-import { PieChart, Pie, ResponsiveContainer, Tooltip, Sector } from "recharts";
+import { PieChart, Pie, ResponsiveContainer, Tooltip, Sector, Legend } from "recharts";
 
 // Farben für die Segmente
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export default function CategoryChart({ data }) {
 
+const [mobile,setMobile] = useState(false)
+
+useEffect(() => {
+const chekMobile = () => {
+  setMobile(window.innerWidth < 768)
+}
+
+chekMobile();
+window.addEventListener('resize',chekMobile)
+return () => window.removeEventListener('resize' , chekMobile)
+} , [])
   /**
    * Custom Shape Renderer (Moderne Lösung statt Cell)
    * Hier definieren wir das Aussehen jedes Segments individuell.
@@ -45,17 +57,17 @@ export default function CategoryChart({ data }) {
       <header className="flex items-center justify-between mb-8">
         <Link 
           href="/dashboard" 
-          className="group flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl hover:scale-105 transition-all font-bold shadow-lg shadow-blue-500/20"
+          className="group justify-center mx-auto flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl hover:scale-105 transition-all font-bold shadow-lg shadow-blue-500/20"
         >
-          <HiOutlineArrowLeft className="transition-transform group-hover:-translate-x-1" />
+          <HiOutlineArrowLeft className="transition-transform group-hover:-translate-x-1 " />
           Mein Dashboard
         </Link>
       </header>
 
-      <div className="w-full bg-linear-to-br from-slate-200 to-slate-400/60 dark:from-slate-800 dark:to-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-inner">
+      <div className="w-full bg-linear-to-br from-slate-200 md:p-8 to-slate-400/60 dark:from-slate-800 dark:to-slate-900 p-2 py-4 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-inner">
         
-        <div className="h-100 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        
+          <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie 
                 data={data} 
@@ -64,12 +76,12 @@ export default function CategoryChart({ data }) {
                 cx="50%" 
                 cy="50%"  
                 innerRadius="70%" 
-                outerRadius="85%" 
+                outerRadius="80%" 
                 paddingAngle={8} 
                 shape={renderCustomShape} // Hier wird die Custom Shape genutzt
                 stroke="none"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={ mobile ? false : ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`} // Prozentuale Beschriftung
               />
 
               <Tooltip 
@@ -83,9 +95,16 @@ export default function CategoryChart({ data }) {
                 }}
                 itemStyle={{ color: '#fff' }}
               />
+
+              <Legend
+              verticalAlign="bottom"
+              height={36}
+              iconType="circle"
+              formatter={(value, entry) => <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{value}</span>}
+              />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+       
       </div>
     </>
   );

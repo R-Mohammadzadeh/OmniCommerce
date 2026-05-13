@@ -5,70 +5,76 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { sendOtpAction } from "@/lib/authActions";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { GrUserAdmin } from "react-icons/gr";
+import { signIn, useSession } from "next-auth/react";
 import { Eye, EyeOff } from "lucide-react";
-import { MdOutlinePassword } from "react-icons/md";
-import { FaBarcode } from "react-icons/fa6";
+import DemoInfo from "@/Components/Demo.info";
+
 /**
  * LoginPage Komponente
- * Implementiert einen Zwei-Faktor-Authentifizierungs-Ablauf.
- * Schritt 1: Validierung der Anmeldedaten und OTP-Anforderung.
- * Schritt 2: OTP-Verifizierung und abschließende Anmeldung.
+ * Verwaltet einen zweistufigen Authentifizierungsprozess:
+ * 1. Validierung von E-Mail/Passwort und Anforderung des OTP-Codes.
+ * 2. Überprüfung des OTP-Codes und Durchführung des Logins.
  */
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpCode, setOtpCode] = useState("");
-  const [step, setStep] = useState(1); // 1: Anmeldedaten, 2: OTP-Eingabe
+  const [step, setStep] = useState(1); // Schritt 1: Anmeldedaten, Schritt 2: OTP
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(false); // Umschalten der Passwort-Sichtbarkeit
 
   const router = useRouter();
+  const { update } = useSession();
 
-  /**
-   * Phase 1: Überprüft die Benutzerdaten und löst den Versand der OTP-E-Mail aus.
-   */
+  // --- Phase 1: OTP-Code anfordern ------------------------------------
   async function handleSendOtp(e) {
     e.preventDefault();
     setIsSubmit(true);
     try {
       const res = await sendOtpAction(email, password);
       if (res.success) {
-        // Informiert den Nutzer, dass der Code gesendet wurde
-        toast.success("Verifizierungscode wurde an Ihre E-Mail gesendet!");
+        toast.success("Verifizierungscode wurde gesendet!");
         setStep(2);
       } else {
         toast.error(res.message || "Ungültige Anmeldedaten");
       }
+    } catch (err) {
+      console.error("Fehler beim Senden des OTP:", err);
+      toast.error("Ein unerwarteter Fehler ist aufgetreten");
     } finally {
       setIsSubmit(false);
     }
   }
 
-  /**
-   * Phase 2: Verifiziert den 5-stelligen OTP-Code und schließt den Login ab.
-   */
+  // --- Phase 2: OTP verifizieren und Login durchführen ------------------------
   async function handleVerifyAndLogin(e) {
     e.preventDefault();
     setIsSubmit(true);
     try {
       const res = await signIn("credentials", {
         email,
+        password,
         otp: otpCode,
         redirect: false,
       });
 
       if (res?.error) {
         toast.error("Ungültiger oder abgelaufener Code.");
-      } else {
-        toast.success("Anmeldung erfolgreich!");
-        // Weiterleitung basierend auf der Rolle (Admin oder Nutzer)
-        router.push(res?.url?.includes('admin') ? '/admin' : '/');
-        router.refresh();
+        return;
       }
+
+      toast.success("Anmeldung erfolgreich!");
+
+      // Session aktualisieren, um die neuesten Benutzerdaten (z. B. Rolle) zu erhalten
+      const updatedSession = await update();
+      const role = updatedSession?.user?.role;
+
+      // Weiterleitung basierend auf der Benutzerrolle
+      router.push(role === "admin" ? "/admin" : "/");
+      router.refresh();
+
     } catch (err) {
-      console.error("Authentifizierungs-Fehler:", err);
+      console.error("Login-Fehler:", err);
       toast.error("Ein unerwarteter Fehler ist aufgetreten");
     } finally {
       setIsSubmit(false);
@@ -89,12 +95,17 @@ export default function LoginPage() {
             : "Bitte geben Sie den 5-stelligen Code ein, den wir Ihnen gesendet haben."}
         </p>
 
-        <form onSubmit={step === 1 ? handleSendOtp : handleVerifyAndLogin} className="space-y-6">
+        <form
+          onSubmit={step === 1 ? handleSendOtp : handleVerifyAndLogin}
+          className="space-y-6"
+        >
           {step === 1 ? (
-            /* Phase 1: Eingabefelder für E-Mail und Passwort */
+            // --- Schritt 1: Formular für Anmeldedaten ---
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-semibold dark:text-gray-300 ml-1">E-Mail</label>
+                <label className="text-sm font-semibold dark:text-gray-300 ml-1">
+                  E-Mail
+                </label>
                 <input
                   type="email"
                   required
@@ -106,7 +117,9 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold dark:text-gray-300 ml-1">Passwort</label>
+                <label className="text-sm font-semibold dark:text-gray-300 ml-1">
+                  Passwort
+                </label>
                 <div className="relative">
                   <input
                     type={isShow ? "text" : "password"}
@@ -116,7 +129,6 @@ export default function LoginPage() {
                     placeholder="••••••••"
                     className="w-full px-4 py-3 rounded-xl border dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                   />
-                  {/* Umschalten der Passwort-Sichtbarkeit */}
                   <span
                     className="absolute top-3 right-3 dark:text-gray-400 cursor-pointer"
                     onClick={() => setIsShow(!isShow)}
@@ -127,9 +139,11 @@ export default function LoginPage() {
               </div>
             </div>
           ) : (
-            /* Phase 2: Eingabefeld für den OTP-Code */
+            // --- Schritt 2: Formular für OTP-Verifizierung ---
             <div className="space-y-2">
-              <label className="text-sm font-semibold dark:text-gray-300 ml-1">OTP-Code</label>
+              <label className="text-sm font-semibold dark:text-gray-300 ml-1">
+                OTP-Code
+              </label>
               <input
                 type="text"
                 required
@@ -139,6 +153,13 @@ export default function LoginPage() {
                 placeholder="00000"
                 className="w-full px-4 py-3 rounded-xl border dark:bg-slate-800 dark:border-slate-700 dark:text-white text-center text-2xl tracking-widest font-mono focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
               />
+              <button
+                type="button"
+                onClick={() => { setStep(1); setOtpCode(""); }}
+                className="text-sm text-gray-400 hover:text-indigo-400 transition-colors mt-1"
+              >
+                ← Zurück
+              </button>
             </div>
           )}
 
@@ -153,13 +174,20 @@ export default function LoginPage() {
               ${isSubmit ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] active:scale-[0.98]"}
             `}
           >
-            {isSubmit ? "Bitte warten..." : step === 1 ? "Code anfordern" : "Anmelden"}
+            {isSubmit
+              ? "Bitte warten..."
+              : step === 1
+                ? "Code anfordern"
+                : "Anmelden"}
           </button>
         </form>
 
         {step === 1 && (
           <div className="mt-6 text-center space-y-2">
-            <Link href="/forget-password" size="sm" className="text-indigo-500 hover:underline text-sm block">
+            <Link
+              href="/forget-password"
+              className="text-indigo-500 hover:underline text-sm block"
+            >
               Passwort vergessen?
             </Link>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -168,51 +196,10 @@ export default function LoginPage() {
                 Jetzt registrieren
               </Link>
             </p>
-            
-          {/* Demo Admin Info Section */}
-<div className="pt-5 mt-4 border-t border-gray-200 dark:border-gray-700">
-  <div className="flex flex-col gap-3 text-sm font-mono">
-
-    {/* Email */}
-    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
-      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-        <GrUserAdmin className="text-indigo-500 text-lg" />
-        <span>Email</span>
-      </div>
-
-      <span className="text-gray-900 dark:text-gray-100 font-semibold">
-        demo-admin@test.com
-      </span>
-    </div>
-
-    {/* Password */}
-    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
-      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-        <MdOutlinePassword className="text-indigo-500 text-lg" />
-        <span>Password</span>
-      </div>
-
-      <span className="bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 px-3 py-1 rounded-lg font-bold tracking-wider">
-        12345678@
-      </span>
-    </div>
-
-    {/* OTP */}
-    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-gray-800/50 px-4 py-3">
-      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-        <FaBarcode className="text-indigo-500 text-lg" />
-        <span>OTP</span>
-      </div>
-
-      <span className="bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 px-3 py-1 rounded-lg font-bold tracking-[3px]">
-        11111
-      </span>
-    </div>
-
-  </div>
-</div>
+            <DemoInfo />
           </div>
         )}
+
       </div>
     </section>
   );

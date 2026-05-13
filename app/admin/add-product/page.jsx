@@ -144,19 +144,19 @@ export default function AddProductPage() {
           </div>
 
           {/* Form Actions (Submit & Cancel) */}
-          <div className="flex gap-4 pt-4">
+          <div className="flex text-center justify-center items-center mx-auto gap-4 pt-6 flex-col sm:flex-row sm:items-center">
             <button
               type="submit"
               disabled={isPending}
-              className="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors disabled:opacity-50"
+              className="w-full sm:flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors disabled:opacity-50"
             >
               {isPending ? dict.form.processing : dict.form.submit}
             </button>
             <Link
               href="/admin"
-              className="px-8 py-3 border border-gray-300 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-center flex items-center dark:text-white dark:hover:bg-slate-700"
+              className="w-full  sm:flex-1 px-6 py-3 border border-gray-300 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-center flex items-center dark:text-white dark:hover:bg-slate-700"
             >
-              {dict.form.back}
+             <span className="text-center mx-auto"> {dict.form.back}</span>
             </Link>
           </div>
         </form>
