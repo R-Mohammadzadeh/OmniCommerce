@@ -70,7 +70,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="p-10 mt-16 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-black text-slate-800 dark:text-white my-8 tracking-tighter uppercase">
+      <h1 className="text-3xl text-center text-nowrap font-black text-slate-800 dark:text-white my-8 tracking-tighter uppercase">
         Dashboard-Übersicht
       </h1>
 
