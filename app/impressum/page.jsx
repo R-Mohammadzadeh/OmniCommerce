@@ -21,8 +21,8 @@ export default function ImpressumPage() {
           <h2 className="text-xl font-bold">Angaben gemäß § 5 TMG</h2>
           <p className="text-gray-600 dark:text-gray-400">
             Reza Store<br />
-            Zum Mühlenfeld 9<br />
-            50127 Bergheim
+            <br />Tech-Straße 123
+               12345 Berlin, Deutschland
           </p>
         </section>
 
@@ -30,8 +30,8 @@ export default function ImpressumPage() {
         <section className="mb-8">
           <h2 className="text-xl font-bold">Kontakt</h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Telefon: <a href="tel:+4917647116508" className="hover:text-blue-600 transition-colors">0176 47116508</a><br />
-            E-Mail: <a href="mailto:reza203393@yahoo.de" className="hover:text-blue-600 transition-colors">reza203393@yahoo.de</a>
+            Telefon: <a href="tel:+491700000" className="hover:text-blue-600 transition-colors">0176 47116508</a><br />
+            E-Mail: <a href="mailto:0000000" className="hover:text-blue-600 transition-colors">reza203393@yahoo.de</a>
           </p>
         </section>
 

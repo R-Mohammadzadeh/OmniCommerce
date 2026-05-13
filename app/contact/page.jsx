@@ -78,7 +78,7 @@ export default function KontaktPage() {
                   <div>
                     <p className="text-sm text-slate-500 dark:text-gray-400">Rufen Sie uns an</p>
                     <a href="tel:+4917647116508" className="font-bold text-lg hover:text-blue-600 transition-colors dark:text-white">
-                      +49 176 47116508
+                      +49 176 00000
                     </a>
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export default function KontaktPage() {
                   <div>
                     <p className="text-sm text-slate-500 dark:text-gray-400">Schreiben Sie uns</p>
                     <a href="mailto:reza203393@yahoo.de" className="font-bold text-lg hover:text-emerald-500 transition-colors dark:text-white">
-                      reza203393@yahoo.de
+                      reza00000@yahoo.de
                     </a>
                   </div>
                 </div>
@@ -104,7 +104,8 @@ export default function KontaktPage() {
                   <div>
                     <p className="text-sm text-slate-500 dark:text-gray-400">Unser Standort</p>
                     <p className="font-bold text-lg dark:text-white">
-                      Zum Mühlenfeld 9, 50127 Bergheim
+                      Tech-Straße 123 ,
+                      12345 Berlin, Deutschland
                     </p>
                   </div>
                 </div>
